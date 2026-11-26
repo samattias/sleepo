@@ -1,0 +1,17 @@
+# SleePO's Python dependencies (Python 3.9+; macOS's /usr/bin/python3 is 3.9).
+#   python3 -m venv ~/.assist/venv && ~/.assist/venv/bin/pip install -r requirements.txt
+# Versions are the ones the app runs on today (16 Nov 2026).
+fastapi>=0.128,<0.129
+starlette>=0.49,<0.50
+pydantic>=2.13,<3
+uvicorn>=0.39,<0.40
+watchfiles>=1.1,<2        # the server's reload watcher (assist/reload.trigger)
+requests>=2.32,<3
+msal>=1.39,<2             # Microsoft Graph sign-in (mail-login, outlook-login)
+keyring>=25.7,<26         # tokens in the macOS Keychain
+pypdf>=6.19,<7
+PyMuPDF>=1.26,<2          # PDF previews and avatars (imported as fitz)
+
+# Optional: search by meaning (assist/embed.py). Without it search stays keyword-only.
+# fastembed
+# numpy

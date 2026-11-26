@@ -1,0 +1,23 @@
+{
+  "_about": "An example org pack for SleePO (DESIGN-PERSONALISATION.md): what everyone at one company sets the same way. Copy it, fill it in for your company and share it with colleagues; point an install at it in Personalisation (Org pack file) or put it at org/pack.json in the data folder. Every section is optional.",
+  "name": "Example Co",
+  "domains": ["example.com"],
+  "address_pattern": "{first}.{last}@example.com",
+  "site": "example.com",
+  "company_names": ["example co"],
+  "about": {"what": "workflow software", "strategy": "workflow software; about $10M ARR", "review": "a workflow software company"},
+  "org_chart": {"label": "HR org chart", "as_of": "", "source": "", "tree": {"Ann Chief": ["Milo Rivera", "Jordan Noel"]}, "titles": {}, "name_fixes": {}},
+  "known_people": {"Pat Former": ["former employee", "Example Co", "Left in 2026"]},
+  "company_kinds": {"Partner Co": "partner"},
+  "people_aliases": {"Jordan Noel": ["jo lee"]},
+  "mishearings": [["jorden", "Jordan Noel"]],
+  "noise_senders": ["hr-tool"],
+  "shared_mailboxes": ["all-staff"],
+  "products": [["core", "Example Core", "\\bExample Core\\b", false]],
+  "jira": {"site": "example.atlassian.net", "projects": ["SUP"], "support_desk": ["SUP"]},
+  "crm": {"system": "Salesforce", "instance": "", "history_start": "2026-01-01", "stage_order": [], "new_business": ["New Logo"], "fx": {"USD": 1.0},
+          "regions": ["Other"], "bands": [[null, "All"]], "expansion": ["Upsell"], "customer_sales": ["Renewal"], "connector": "", "connector_tools": []},
+  "roadmap": {},
+  "kb": {},
+  "presentation_template": ""
+}

@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-brand: "Unbounded", "Inter", -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel2: var(--panel2);
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink2);
+  --color-ink3: var(--ink3);
+  --color-line: var(--line);
+  --color-line2: var(--line2);
+  --color-accent: var(--accent);
+  --color-accentbg: var(--accent-bg);
+  --color-onaccent: #0a0a0a;
+  --color-hot: var(--hot);
+  /* status maps onto the two neons: volt = fine, hot = needs attention */
+  --color-good: var(--accent);
+  --color-warn: var(--hot);
+  --color-serious: var(--hot);
+  --color-critical: var(--hot);
+}
+
+:root { color-scheme: light; --bg:#fafafa; --panel:#ffffff; --panel2:#f3f3f3; --ink:#0a0a0a; --ink2:#1c1c1c; --ink3:#3a3a3a; --line:#e4e4e4; --line2:#eeeeee; --accent:#c8ff00; --accent-bg:#f0f0f0; --hot:#e0006f; --link:#0a0a0a; --link-thick:.42em; --link-offset:-.22em; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; --bg:#17181a; --panel:#1e1f22; --panel2:#26272b; --ink:#ececec; --ink2:#dcdcdc; --ink3:#b4b4b6; --line:#34353a; --line2:#2a2b2f; --accent:#c8ff00; --accent-bg:#2c2d31; --hot:#ff2e88; --link:#c8ff00; --link-thick:1px; --link-offset:3px; }
+}
+:root[data-theme="dark"] { color-scheme: dark; --bg:#17181a; --panel:#1e1f22; --panel2:#26272b; --ink:#ececec; --ink2:#dcdcdc; --ink3:#b4b4b6; --line:#34353a; --line2:#2a2b2f; --accent:#c8ff00; --accent-bg:#2c2d31; --hot:#ff2e88; --link:#c8ff00; --link-thick:1px; --link-offset:3px; }
+
+@layer base {
+  html, body { background: var(--bg); color: var(--ink); overscroll-behavior: none; }   /* no rubber-band bounce at the ends of a page (Sam, 22 Oct 2026) */
+  body { font: 15px/1.5 var(--font-sans); font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  a { color: var(--link); font-weight: 500; text-decoration-line: underline; text-decoration-color: var(--accent); text-decoration-skip-ink: none;
+      text-decoration-thickness: var(--link-thick); text-underline-offset: var(--link-offset); }
+  a:hover { background: var(--accent); color: #0a0a0a; text-decoration: none; }
+  /* nav, rows, chips and other "object" links are not hyperlinks */
+  a.no-underline, a.no-underline:hover { background: none; color: inherit; font-weight: inherit; text-decoration: none; }
+  ::selection { background: var(--accent); color: #0a0a0a; }
+}
+
+/* rendered markdown */
+.md h1 { font-size: 22px; font-weight: 650; margin: .1em 0 .5em; }
+.md h2 { font-size: 17px; font-weight: 600; margin: 1.4em 0 .5em; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+.md h3 { font-size: 15px; font-weight: 600; margin: 1.1em 0 .4em; }
+.md p { margin: .5em 0; }
+.md ul { list-style: disc; padding-left: 22px; } .md ol { list-style: decimal; padding-left: 22px; }
+.md li { margin: 4px 0; }
+.md table { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 8px 0 14px; display: block; overflow: auto; }
+.md th, .md td { border: 1px solid var(--line); padding: 6px 9px; text-align: left; vertical-align: top; }
+.md th { background: var(--panel2); font-weight: 600; }
+.md code { font-family: var(--font-mono); font-size: 12.5px; background: var(--panel2); padding: 1px 5px; }
+.md pre { background: var(--panel2); border: 1px solid var(--line); padding: 12px; overflow: auto; font-size: 12.5px; }
+.md pre code { background: none; padding: 0; }
+.md blockquote { border-left: 2px solid var(--accent); padding: 2px 14px; color: var(--ink2); }
+.md em { color: var(--ink2); }
+.md hr { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
+
+.md input[type=checkbox] { margin-right: 6px; accent-color: var(--accent); }
+mark { background: var(--accent); color: #0a0a0a; }
+
+/* ---------------------------------------------------------------- calendar (react-big-calendar, house style) */
+.assist-cal .rbc-calendar { color: var(--ink); font-size: 13px; }
+.assist-cal .rbc-month-view, .assist-cal .rbc-time-view, .assist-cal .rbc-agenda-view { border-color: var(--line); background: var(--panel); border-radius: 0; }
+.assist-cal .rbc-header, .assist-cal .rbc-day-bg + .rbc-day-bg, .assist-cal .rbc-month-row + .rbc-month-row, .assist-cal .rbc-time-header-content,
+.assist-cal .rbc-time-content, .assist-cal .rbc-timeslot-group, .assist-cal .rbc-time-content > * + * > *, .assist-cal .rbc-day-slot .rbc-time-slot,
+.assist-cal .rbc-header + .rbc-header, .assist-cal .rbc-time-header.rbc-overflowing, .assist-cal .rbc-agenda-view table.rbc-agenda-table,
+.assist-cal .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td, .assist-cal .rbc-agenda-view table.rbc-agenda-table tbody > tr + tr,
+.assist-cal .rbc-agenda-view table.rbc-agenda-table thead > tr > th, .assist-cal .rbc-time-header-gutter, .assist-cal .rbc-allday-cell, .assist-cal .rbc-row-bg { border-color: var(--line); }
+.assist-cal .rbc-day-slot .rbc-time-slot { border-top-color: var(--line2); }
+.assist-cal .rbc-header { padding: 6px 4px; font-weight: 600; font-size: 13px; }
+.assist-cal .rbc-header a, .assist-cal .rbc-date-cell a, .assist-cal .rbc-show-more { color: var(--ink); text-decoration: none; font-weight: 500; background: none; }
+.assist-cal .rbc-off-range-bg { background: var(--panel2); }
+.assist-cal .rbc-off-range { color: var(--ink3); opacity: .55; }
+.assist-cal .rbc-today { background: var(--accent-bg); }
+.assist-cal .rbc-current-time-indicator { background: var(--hot); height: 2px; }
+.assist-cal .rbc-time-gutter .rbc-label { color: var(--ink3); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+/* two clocks side by side: UK, then Portland lighter (views/calendar.tsx SlotWrapper, GutterHeader) */
+.assist-cal .two-clock { display: grid; grid-template-columns: 44px 44px; column-gap: 6px; justify-items: end; white-space: nowrap; }
+.assist-cal .rbc-time-gutter .rbc-label.two-clock { font-size: 11.5px; }
+.assist-cal .rbc-time-gutter, .assist-cal .rbc-time-header-gutter { min-width: 112px; }
+/* custom toolbar replaces rbc's; hide any default one */
+.assist-cal .rbc-toolbar { display: none; }
+
+/* grid: hour lines solid, half-hour lines faint; today's column tinted; weekends quieter */
+.assist-cal .rbc-time-view .rbc-header { padding: 8px 4px; border-bottom: 1px solid var(--line); }
+/* the all-day row is height:100% in rbc and squeezes the date row; keep the date row at its natural height */
+.assist-cal .rbc-time-header-cell { flex-shrink: 0; }
+.assist-cal .rbc-time-view .rbc-header { overflow: visible; min-height: 56px; }
+.assist-cal .rbc-time-view .rbc-header .rbc-button-link { display: block; width: 100%; }
+.assist-cal .rbc-time-header-content .rbc-header { font-weight: 400; }
+.assist-cal .rbc-day-slot .rbc-time-slot + .rbc-time-slot { border-top: 1px dashed var(--line2); }
+.assist-cal .rbc-day-slot .rbc-timeslot-group { border-bottom-color: var(--line); }
+.assist-cal .rbc-time-view .rbc-day-bg.rbc-today, .assist-cal .rbc-time-view .rbc-day-slot.rbc-today { background: color-mix(in oklab, var(--accent) 7%, var(--panel)); }
+.assist-cal .rbc-month-view .rbc-day-bg.rbc-today { background: color-mix(in oklab, var(--accent) 9%, var(--panel)); }
+.assist-cal .rbc-header.rbc-today { background: transparent; }
+/* weekends greyed (Sam, 22 Oct 2026): Saturday and Sunday columns, their headers and month cells; today's highlight still wins */
+.assist-cal .rbc-day-bg.rbc-weekend:not(.rbc-today), .assist-cal .rbc-day-slot.rbc-weekend:not(.rbc-today), .assist-cal .rbc-header:has(.cal-weekend) { background: var(--panel2); }
+.assist-cal .rbc-time-gutter .rbc-timeslot-group { border-bottom: 0; }
+.assist-cal .rbc-time-gutter .rbc-label { padding: 0 8px; position: relative; top: -8px; }
+.assist-cal .rbc-allday-cell { min-height: 22px; }
+.assist-cal .rbc-time-content { border-top: 1px solid var(--line); }
+.assist-cal .rbc-current-time-indicator::before { content: ''; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 9999px; background: var(--hot); }
+.assist-cal .rbc-month-view .rbc-header { padding: 6px 4px; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; color: var(--ink3); }
+.assist-cal .rbc-date-cell { padding: 4px 6px 2px; text-align: right; }
+.assist-cal .rbc-date-cell.rbc-off-range { opacity: .45; }
+
+/* events: tinted fill by kind, 3px left bar, readable title */
+.assist-cal .rbc-event, .assist-cal .rbc-day-slot .rbc-background-event {
+  border: 0; border-left: 3px solid var(--ink3); border-radius: 0; background: var(--panel2); color: var(--ink); padding: 2px 6px; font-size: 12px; line-height: 1.3; font-weight: 500;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent); }
+.assist-cal .rbc-day-slot .rbc-event { border: 0; border-left: 3px solid var(--ink3); }
+.assist-cal .rbc-event.rbc-selected, .assist-cal .rbc-event:focus { outline: 2px solid var(--ink); outline-offset: -2px; }
+.assist-cal .rbc-event:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.assist-cal .rbc-month-view .rbc-event { padding: 1px 5px; font-size: 11.5px; }
+.assist-cal .rbc-month-view .rbc-event-content { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.assist-cal .rbc-row-segment { padding: 0 3px 2px 2px; }
+.assist-cal .rbc-show-more { font-size: 11.5px; color: var(--ink2); padding-left: 4px; }
+.ev-recorded, .assist-cal .rbc-event.ev-recorded { border-left-color: var(--accent) !important; background: color-mix(in oklab, var(--accent) 14%, var(--panel)); }
+.ev-granola-only, .assist-cal .rbc-event.ev-granola-only { border-left-color: var(--accent) !important; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); outline: 1px dashed color-mix(in oklab, var(--ink) 35%, transparent); outline-offset: -1px; }
+.ev-missed, .assist-cal .rbc-event.ev-missed { border-left-color: var(--hot) !important; background: color-mix(in oklab, var(--hot) 8%, var(--panel)); }
+.ev-meeting, .assist-cal .rbc-event.ev-meeting { border-left-color: var(--ink) !important; background: var(--panel2); }
+.ev-block, .assist-cal .rbc-event.ev-block { border-left-color: var(--line) !important; color: var(--ink3); font-weight: 400; background: repeating-linear-gradient(135deg, var(--panel2) 0 6px, var(--panel) 6px 12px); }
+/* not accepted yet (a tentative reply or none): Outlook's hatching and a dashed bar, over the kind's own colours */
+.ev-tentative, .assist-cal .rbc-event.ev-tentative { border-left-style: dashed !important; background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--ink) 9%, transparent) 0 3px, transparent 3px 7px); }
+.legend-sw { display: inline-block; width: 12px; height: 10px; border-left: 3px solid var(--ink3); background: var(--panel2); box-shadow: inset 0 0 0 1px var(--line); }
+.assist-cal .rbc-agenda-view table.rbc-agenda-table { font-size: 13px; }
+.assist-cal .rbc-agenda-view .rbc-agenda-event-cell { cursor: pointer; }
+.assist-cal .rbc-overlay { background: var(--panel); border: 1px solid var(--line); box-shadow: 0 8px 24px rgb(0 0 0 / .18); }
+.assist-cal .rbc-overlay-header { border-color: var(--line); font-weight: 600; }
+.assist-cal .rbc-time-view .rbc-event .rbc-event-label { display: none; }
+.assist-cal .rbc-time-view .rbc-event { padding: 3px 5px; }
+.assist-cal .rbc-time-view .rbc-event-content { white-space: normal; overflow: hidden; }
+.assist-cal .rbc-time-view .rbc-timeslot-group { min-height: 60px; }
+.assist-cal .rbc-time-view .rbc-event { line-height: 15px; }
+
+/* graph view: one colour per node type (canvas reads these), tooltip from react-force-graph */
+:root { --g-initiative:#c8ff00; --g-area:#9a9a9a; --g-person:#33415c; --g-partner:#8a6420; --g-org:#5c5c5c; --g-topic:#e0006f; --g-task:#2f7d5b; --g-meeting:#8792a8; --g-document:#7d5ba6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --g-area:#7a7a7a; --g-person:#8fa6d4; --g-partner:#d7a957; --g-org:#a3a3a3; --g-topic:#ff2e88; --g-task:#5cc48f; --g-meeting:#5d6678; --g-document:#a98ad1; } }
+:root[data-theme="dark"] { --g-area:#7a7a7a; --g-person:#8fa6d4; --g-partner:#d7a957; --g-org:#a3a3a3; --g-topic:#ff2e88; --g-task:#5cc48f; --g-meeting:#5d6678; --g-document:#a98ad1; }
+.float-tooltip-kap { background: var(--panel) !important; color: var(--ink) !important; border: 1px solid var(--line); border-radius: 10px !important; padding: 6px 10px !important;
+  font: 13px/1.35 var(--font-sans) !important; max-width: 320px; box-shadow: 0 10px 24px -10px rgb(0 0 0 / .3); }   /* a floating surface like the menus (UI review, 30 Oct 2026) */
+.float-tooltip-kap b { display: block; font-weight: 600; }
+.float-tooltip-kap span { display: block; color: var(--ink2); font-size: 12px; }
+
+/* Side panels (meeting panel): compact reading type */
+.panel-md .md { font-size: 13.5px; line-height: 1.5; }
+.panel-md .md h1 { font-size: 14.5px; font-weight: 600; margin: 1em 0 .3em; }
+.panel-md .md h1:first-child, .panel-md .md h2:first-child { margin-top: 0; }
+.panel-md .md h2 { font-size: 14px; font-weight: 600; margin: .9em 0 .3em; padding-bottom: 0; border-bottom: 0; }
+.panel-md .md h3 { font-size: 13.5px; font-weight: 600; margin: .8em 0 .25em; }
+.panel-md .md p { margin: .3em 0; }
+.panel-md .md ul, .panel-md .md ol { padding-left: 18px; margin: .2em 0; }
+.panel-md .md li { margin: 2px 0; }
+.panel-md .md li > ul { margin: 1px 0; }
+
+/* An email body is white paper in both themes (its own colours assume white); in dark mode it sits inset as a card. */
+.mailpaper { background: #fff; color: #111; border-radius: 10px; overflow: hidden; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mailpaper { padding: 12px 14px; } }
+:root[data-theme="dark"] .mailpaper { padding: 12px 14px; }
+
+/* The icon rail's labels (Layout.tsx): volt, slid in from the icon. */
+@keyframes rail-tip-in { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: none; } }
+.rail-tip { animation: rail-tip-in .12s ease-out; }
+@media (prefers-reduced-motion: reduce) { .rail-tip { animation: none; } }
+/* Ask SleePO's page chip (components/Chat.tsx PageChip): pale volt, inside the message box like an attachment */
+.page-chip { background: color-mix(in oklab, var(--accent) 20%, var(--panel)); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 50%, var(--line)); }
+/* a Markdown excerpt in a chip's hover card (components/ContextChip.tsx): a meeting's notes or brief at the card's size */
+.chip-md .md h1, .chip-md .md h2, .chip-md .md h3 { font-size: 13px; font-weight: 600; margin: .5em 0 .15em; padding: 0; border: 0; }
+.chip-md .md p { margin: .25em 0; } .chip-md .md ul, .chip-md .md ol { padding-left: 16px; } .chip-md .md li { margin: 1px 0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-chip { background: color-mix(in oklab, var(--accent) 9%, var(--panel)); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 32%, var(--line)); } }
+:root[data-theme="dark"] .page-chip { background: color-mix(in oklab, var(--accent) 9%, var(--panel)); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 32%, var(--line)); }
+/* Ask SleePO's hover menu over the floating badge (components/Chat.tsx QuickMenu) */
+.quick-menu { animation: quick-menu-in .14s ease-out; transform-origin: bottom right; }
+@keyframes quick-menu-in { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .quick-menu { animation: none; } }
+/* What the onboarding agent found, each line arriving as it reads (views/setup.tsx Read) */
+.note-in { animation: quick-menu-in .3s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .note-in { animation: none; } }
+
+/* Messages (views/messages.tsx, Sam 22 Oct 2026): chat bubbles with a soft tint per person, from --h (a hue from the name,
+   lib/util hue), and Sam's own in a pale volt. light-dark() follows the color-scheme each theme sets. */
+.msg-them { background: light-dark(color-mix(in oklab, hsl(var(--h) 85% 55%) 9%, var(--panel)), color-mix(in oklab, hsl(var(--h) 60% 55%) 15%, var(--panel)));
+  border: 1px solid light-dark(color-mix(in oklab, hsl(var(--h) 70% 50%) 20%, var(--line)), color-mix(in oklab, hsl(var(--h) 50% 55%) 22%, var(--line))); }
+.msg-name { color: light-dark(hsl(var(--h) 60% 33%), hsl(var(--h) 70% 74%)); }
+.msg-mine { background: light-dark(color-mix(in oklab, var(--accent) 32%, var(--panel)), color-mix(in oklab, var(--accent) 16%, var(--panel))); }
+
+/* SleePO loading (components/Logo.tsx animate, 22 Oct 2026): the sleeping face breathes, its mouth snores, and the Zs drift up
+   and fade in turn, inside the square (black Zs would vanish on the dark theme outside it). Shapes animate around their own box (transform-box: fill-box); the face around the square's base. */
+@keyframes sleepo-breathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-0.6px) scale(1.04); } }
+@keyframes sleepo-snore { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.7); } }
+@keyframes sleepo-z { 0% { opacity: 0; transform: translate(-2px, 3px) scale(.55) rotate(-8deg); } 20% { opacity: 1; }
+  65% { opacity: 1; } 100% { opacity: 0; transform: translate(3px, -6px) scale(1.15) rotate(10deg); } }
+.sleepo-anim .sl-face { transform-box: view-box; transform-origin: 16px 32px; animation: sleepo-breathe 2.4s ease-in-out infinite; }
+.sleepo-anim .sl-mouth { transform-box: fill-box; transform-origin: center; vector-effect: non-scaling-stroke; animation: sleepo-snore 2.4s ease-in-out infinite; }
+.sleepo-anim .sl-z1, .sleepo-anim .sl-z2, .sleepo-anim .sl-z3 { transform-box: fill-box; transform-origin: center; animation: sleepo-z 2.4s ease-in-out infinite; }
+.sleepo-anim .sl-z3 { animation-delay: 0s; }
+.sleepo-anim .sl-z2 { animation-delay: .8s; }
+.sleepo-anim .sl-z1 { animation-delay: 1.6s; }
+@media (prefers-reduced-motion: reduce) { .sleepo-anim * { animation: none !important; } }
+
+/* The mini month beside the Meetings grid (views/calendar.tsx MiniMonth): the week the grid shows, as a pale volt band. */
+.mini-band { background: light-dark(color-mix(in oklab, var(--accent) 26%, var(--panel)), color-mix(in oklab, var(--accent) 14%, var(--panel))); }

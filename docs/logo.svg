@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#c8ff00"/>
+  <!-- closed, sleeping eyes -->
+  <path d="M6.5 18.5q3.25 3.4 6.5 0M19 18.5q3.25 3.4 6.5 0" fill="none" stroke="#0a0a0a" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- a little smile -->
+  <path d="M13.5 24.5q2.5 1.6 5 0" fill="none" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/>
+  <!-- zz -->
+  <path d="M20.5 4.5h5.5l-5.5 6h5.5" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M15 6.5h3l-3 3.2h3" fill="none" stroke="#0a0a0a" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

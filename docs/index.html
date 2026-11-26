@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SleePO · A chief of staff that works while you sleep</title>
+<meta name="description" content="It reads your mail, calendar, meeting notes, Teams and Slack, and every morning hands you one ranked list of what matters, with the replies already drafted and every meeting already prepared.">
+<meta property="og:title" content="SleePO">
+<meta property="og:description" content="It reads your mail, calendar, meeting notes, Teams and Slack, and every morning hands you one ranked list of what matters, with the replies already drafted and every meeting already prepared.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://samattias.github.io/sleepo/">
+<meta property="og:url" content="https://samattias.github.io/sleepo/">
+<meta property="og:image" content="https://samattias.github.io/sleepo/screenshots/01-tasks.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#c8ff00">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: light; --bg:#fafafa; --panel:#ffffff; --panel2:#f3f3f3; --ink:#0a0a0a; --ink2:#1c1c1c; --ink3:#555; --line:#e4e4e4;
+  --accent:#c8ff00; --hot:#e0006f; --band:#0a0a0a; --bandink:#f4f4f4; --shadow: 0 24px 60px -24px rgba(0,0,0,.28); }
+@media (prefers-color-scheme: dark) {
+  :root { color-scheme: dark; --bg:#17181a; --panel:#1e1f22; --panel2:#26272b; --ink:#ececec; --ink2:#dcdcdc; --ink3:#a6a6a8; --line:#34353a;
+    --band:#0d0d0e; --bandink:#ececec; --shadow: 0 24px 60px -24px rgba(0,0,0,.7); }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; height: auto; }
+a { color: inherit; font-weight: 500; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: .38em;
+  text-underline-offset: -.2em; text-decoration-skip-ink: none; }
+a:hover { background: var(--accent); color: #0a0a0a; text-decoration: none; }
+::selection { background: var(--accent); color: #0a0a0a; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.wrap.narrow { max-width: 820px; }
+h1, h2 { font-family: "Unbounded", "Inter", sans-serif; letter-spacing: -.02em; line-height: 1.12; }
+h1 { font-size: clamp(34px, 6vw, 64px); font-weight: 700; margin: 18px auto 18px; max-width: 900px; }
+h2 { font-size: clamp(26px, 3.6vw, 38px); font-weight: 700; margin: 0 0 20px; }
+h3 { font-size: 19px; font-weight: 650; margin: 0 0 8px; line-height: 1.3; }
+p { margin: 0 0 12px; }
+code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel2); padding: 1px 5px; }
+kbd { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid var(--line); border-bottom-width: 2px; padding: 1px 6px;
+  background: var(--panel); border-radius: 6px; }
+section { padding: 88px 0; }
+section.soft { background: var(--panel2); }
+.intro { max-width: 760px; font-size: 18px; color: var(--ink2); margin-bottom: 32px; }
+
+/* header */
+.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.bar { display: flex; align-items: center; gap: 24px; height: 60px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font: 700 18px "Unbounded", sans-serif; text-decoration: none; }
+.brand:hover { background: none; color: inherit; }
+.brand.small { font-size: 14px; gap: 8px; }
+nav { display: flex; gap: 22px; margin-left: 12px; }
+nav a { font-weight: 500; text-decoration: none; color: var(--ink2); padding: 2px 0; }
+nav a:hover { background: none; color: var(--ink); box-shadow: inset 0 -.38em 0 var(--accent); }
+.cta { margin-left: auto; display: flex; gap: 8px; }
+
+/* pills */
+.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 15px;
+  text-decoration: none; border: 1px solid transparent; white-space: nowrap; line-height: 1.2; }
+.btn.lg { padding: 13px 24px; font-size: 16px; }
+.btn.primary { background: var(--accent); color: #0a0a0a; }
+.btn.primary:hover { background: #b4e600; }
+.btn.ghost { color: var(--ink); }
+.btn.ghost:hover { background: var(--panel2); color: var(--ink); }
+.btn.outline { border-color: var(--ink); color: var(--ink); background: transparent; }
+.btn.outline:hover { background: var(--ink); color: var(--bg); }
+.btn.dark { background: #0a0a0a; color: #c8ff00; }
+.btn.dark:hover { background: #222; color: #c8ff00; }
+.btn.outline-dark { border-color: #0a0a0a; color: #0a0a0a; }
+.btn.outline-dark:hover { background: #0a0a0a; color: #c8ff00; }
+.gh { flex: none; }
+
+/* hero */
+.hero { text-align: center; padding: 72px 0 40px; }
+.hero .mark { display: block; margin: 0 auto; box-shadow: 6px 6px 0 var(--ink); overflow: visible; }
+.lede { font-size: clamp(17px, 2vw, 21px); color: var(--ink2); max-width: 760px; margin: 0 auto 28px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.badges { list-style: none; padding: 0; margin: 28px 0 10px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.badges li { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 13px; font-size: 14px; font-weight: 500; }
+.works { color: var(--ink3); font-size: 15px; margin: 0 0 44px; }
+.works a { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; }
+.appicon { width: 20px; height: 20px; max-width: none; flex: none; }   /* max-width: 100% let a flex row squash the icons */
+
+/* screenshots */
+.shot { margin: 0; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.shot .chrome { display: flex; gap: 6px; padding: 9px 12px; border-bottom: 1px solid var(--line); background: var(--panel2); }
+.shot .chrome i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.shot img { display: block; width: 100%; }
+/* the main screenshot on a laptop, drawn in CSS */
+.macbook { position: relative; isolation: isolate; max-width: 1080px; margin: 0 auto; padding: 0 5.5% 12px; perspective: 2200px; }
+.macbook::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 6%; bottom: -6%;
+  background: radial-gradient(closest-side, rgba(200,255,0,.5), rgba(200,255,0,0)); filter: blur(56px); }
+.macbook .lid { position: relative; background: #0b0b0c; padding: 2.3% 2.3% 2.9%; transform-origin: 50% 100%;
+  border-radius: clamp(10px, 1.7vw, 22px) clamp(10px, 1.7vw, 22px) 0 0;
+  box-shadow: inset 0 0 0 1px #3b3c41, 0 0 0 1.5px #a9abb0, 0 30px 60px -30px rgba(0,0,0,.45); }
+.macbook .lid::before { content: ""; position: absolute; top: 0.9%; left: 50%; width: 0.6%; aspect-ratio: 1; border-radius: 50%;
+  background: #24262b; transform: translateX(-50%); box-shadow: inset 0 0 0 1px #34363c; }
+.macbook .screen { overflow: hidden; background: #000; aspect-ratio: 16 / 10; border-radius: 2px; }
+.macbook .screen img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.macbook .base { position: relative; margin: 0 -5.5%; padding-bottom: 2.3%;
+  background: linear-gradient(180deg, #f4f4f6 0%, #dcdde0 30%, #b3b5ba 72%, #85878c 100%);
+  border-radius: 2px 2px 50% 50% / 2px 2px 100% 100%; box-shadow: 0 22px 34px -16px rgba(0,0,0,.5); }
+.macbook .base::before { content: ""; position: absolute; top: 0; left: 50%; width: 12%; height: 40%; transform: translateX(-50%);
+  background: linear-gradient(180deg, #a9abb0, #cfd0d4); border-radius: 0 0 10px 10px; }
+.macbook .base::after { content: ""; position: absolute; top: 0; left: 5.5%; right: 5.5%; height: 1px; background: rgba(0,0,0,.28); }
+
+/* cards */
+.grid { display: grid; gap: 16px; }
+.grid.three { grid-template-columns: repeat(3, 1fr); }
+.grid.two { grid-template-columns: repeat(2, 1fr); }
+.card { background: var(--panel); border: 1px solid var(--line); padding: 24px; }
+.card h3 { display: flex; gap: 10px; align-items: baseline; }
+.card h3::before { content: ""; flex: none; width: 10px; height: 10px; background: var(--accent); transform: translateY(-1px); }
+.card p:last-child { margin-bottom: 0; }
+.card p { color: var(--ink2); }
+h3.sub { font: 700 22px "Unbounded", sans-serif; margin: 72px 0 20px; }
+
+/* features */
+.feature { display: grid; grid-template-columns: 5fr 7fr; gap: 48px; align-items: center; margin: 0 0 88px; }
+.feature.flip .text { order: 2; }
+.feature .text h3 { font: 700 24px/1.2 "Unbounded", sans-serif; margin-bottom: 14px; }
+.feature .text p { font-size: 17px; color: var(--ink2); }
+.feature.solo { grid-template-columns: 1fr; border-left: 6px solid var(--accent); padding: 4px 0 4px 24px; max-width: 820px; }
+.feature:last-of-type { margin-bottom: 0; }
+
+/* apps */
+.app { display: flex; gap: 20px; align-items: flex-start; }
+.app > a { flex: none; line-height: 0; }
+.app > a:hover { background: none; }
+.appbig { width: 64px; height: 64px; flex: none; max-width: none; border-radius: 14px; }
+.app ul { padding-left: 20px; margin: 0 0 12px; color: var(--ink2); }
+.app li { margin: 4px 0; }
+
+/* privacy band */
+.band { background: var(--band); color: var(--bandink); }
+.band h2 { color: #fff; }
+.band .card { background: transparent; border-color: #2e2f33; }
+.band .card h3 { color: #fff; }
+.band .card p { color: #c9c9cc; }
+.band a { color: #fff; }
+
+/* install */
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.step { display: grid; grid-template-columns: 44px 1fr; gap: 16px; background: var(--panel); border: 1px solid var(--line); padding: 24px; }
+.step .num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #0a0a0a; display: grid; place-items: center;
+  font: 700 16px "Unbounded", sans-serif; }
+.step .num.dot { background: transparent; border: 2px solid var(--ink); width: 20px; height: 20px; margin: 8px; }
+.step ul, .step ol { padding-left: 22px; color: var(--ink2); }
+.step ul { list-style: disc; }
+.step li { margin: 6px 0; }
+.step > div > :last-child { margin-bottom: 0; }
+.code { position: relative; margin: 12px 0 16px; }
+.code pre { margin: 0; background: #0f0f10; color: #ececec; padding: 18px 20px; padding-right: 88px; overflow-x: auto;
+  font: 13.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; word-break: break-word; }
+.code pre code { background: none; padding: 0; font: inherit; color: inherit; }
+.code .copy { position: absolute; top: 10px; right: 10px; border: 0; border-radius: 999px; background: var(--accent); color: #0a0a0a;
+  font: 600 13px "Inter", sans-serif; padding: 6px 13px; cursor: pointer; }
+.more-link { margin-top: 24px; color: var(--ink3); }
+
+/* what's new */
+.changes { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+.change { background: var(--panel); border: 1px solid var(--line); padding: 24px; }
+.change h3 { font-size: 15px; color: var(--ink3); font-weight: 600; }
+.change ul { padding-left: 18px; margin: 0; }
+.change li { margin: 8px 0; color: var(--ink2); font-size: 15px; }
+.change strong { color: var(--ink); }
+
+/* questions */
+details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+summary { cursor: pointer; font-weight: 650; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 500 22px/1 "Inter", sans-serif; color: var(--ink3); }
+details[open] summary::after { content: "–"; }
+details p { margin: 12px 0 0; color: var(--ink2); }
+
+/* closing call to action and footer */
+.final { background: var(--accent); color: #0a0a0a; text-align: center; padding: 72px 0; }
+.final h2 { color: #0a0a0a; margin-bottom: 28px; }
+.final a:hover { background: #0a0a0a; }
+footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--ink3); font-size: 14px; }
+.foot { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; }
+.foot a { margin-left: auto; }
+
+/* a little life: the logo sleeps, the laptop opens, sections rise into view (none when motion is reduced) */
+@media (prefers-reduced-motion: no-preference) {
+  .hero .mark { animation: breathe 5s ease-in-out infinite; }
+  .mark .z1, .mark .z2 { animation: snooze 2.6s ease-in-out infinite; }
+  .mark .z2 { animation-delay: .7s; }
+  .hero h1, .hero .lede, .hero .actions, .hero .badges, .hero .works { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+  .hero h1 { animation-delay: .05s; } .hero .lede { animation-delay: .15s; } .hero .actions { animation-delay: .25s; }
+  .hero .badges { animation-delay: .32s; } .hero .works { animation-delay: .38s; }
+  .macbook { animation: rise 1s cubic-bezier(.2,.7,.2,1) .35s both; }
+  .macbook .lid { animation: lid-open 1.6s cubic-bezier(.16,.8,.24,1) .45s both; }
+  .macbook .screen img { animation: screen-on 1s ease 1.3s both; }
+  .macbook::before { animation: glow 2.4s ease 1.4s both; }
+  .btn.primary { transition: transform .15s ease, background .15s ease; }
+  .btn.primary:hover { transform: translateY(-1px); }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+}
+@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes snooze { 0%, 100% { transform: translate(0, 0); opacity: 1; } 55% { transform: translate(1.4px, -2px); opacity: .2; } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes lid-open { from { transform: rotateX(-34deg); } to { transform: rotateX(0); } }
+@keyframes screen-on { from { opacity: 0; filter: brightness(1.6); } to { opacity: 1; filter: none; } }
+@keyframes glow { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 900px) {
+  nav { display: none; }
+  .grid.three, .grid.two, .changes { grid-template-columns: 1fr; }
+  .feature, .feature.flip { grid-template-columns: 1fr; gap: 24px; margin-bottom: 64px; }
+  .feature.flip .text { order: 0; }
+  section { padding: 64px 0; }
+}
+@media (max-width: 560px) {
+  .wrap { padding: 0 16px; }
+  .cta .btn.ghost span { display: none; }
+  .step { grid-template-columns: 1fr; padding: 20px 16px; }
+  .app { flex-direction: column; }
+  .code pre { padding-right: 20px; padding-top: 48px; }
+  .foot a { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap bar">
+<a class="brand" href="#"><img src="logo.svg" alt="" width="28" height="28"><span>SleePO</span></a>
+<nav><a href="#features">Features</a><a href="#private">Privacy</a><a href="#install">Install</a><a href="#faq">Questions</a></nav>
+<div class="cta"><a class="btn ghost" href="https://github.com/samattias/sleepo"><svg class="gh" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span>GitHub</span></a><a class="btn primary" href="#install">Install</a></div>
+</div></header>
+<main>
+<section class="hero"><div class="wrap">
+<svg class="mark" width="72" height="72" role="img" aria-label="SleePO logo: a sleeping face on a bright lime square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#c8ff00"/>
+  <!-- closed, sleeping eyes -->
+  <path d="M6.5 18.5q3.25 3.4 6.5 0M19 18.5q3.25 3.4 6.5 0" fill="none" stroke="#0a0a0a" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- a little smile -->
+  <path d="M13.5 24.5q2.5 1.6 5 0" fill="none" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/>
+  <!-- zz -->
+  <path class="z1" d="M20.5 4.5h5.5l-5.5 6h5.5" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path class="z2" d="M15 6.5h3l-3 3.2h3" fill="none" stroke="#0a0a0a" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>
+<h1>A chief of staff that works while you sleep.</h1>
+<p class="lede">It reads your mail, calendar, meeting notes, Teams and Slack, and every morning hands you one ranked list of what matters, with the replies already drafted and every meeting already prepared.</p>
+<div class="actions"><a class="btn primary lg" href="#install">Install on your Mac</a><a class="btn outline lg" href="https://github.com/samattias/sleepo"><svg class="gh" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>View on GitHub</a></div>
+<ul class="badges"><li>Runs on your Mac</li><li>Reads, never sends</li><li>Powered by Claude</li></ul>
+<p class="works">Recommended to run with <a href="https://granola.ai"><img src="apps/granola.png" alt="" width="128" height="128" class="appicon">Granola</a> and <a href="https://github.com/altic-dev/FluidVoice"><img src="apps/fluidvoice.png" alt="" width="128" height="128" class="appicon">FluidVoice</a></p>
+<figure class="macbook"><div class="lid"><div class="screen"><img src="screenshots/01-tasks.png" alt="SleePO&#x27;s task list: the next step on each task, ranked by your priorities" width="1440" height="900"></div></div><div class="base"></div></figure>
+</div></section>
+
+<section id="why"><div class="wrap">
+<h2>Why SleePO</h2>
+<div class="intro"><p>Leaders don't run out of ideas. They run out of attention. The promise made at the end of a call, the email that needed an
+answer by Friday, the deck someone asked you to review in a Teams chat: each one is small, and together they decide whether
+your week moves your big bets forward or just keeps you busy.</p>
+<p>SleePO reads everything that comes in, works out what is actually on you, and does the first draft of the work, so you
+spend your time deciding instead of searching.</p>
+</div>
+<div class="grid three"><div class="card"><h3>Nothing slips.</h3><p>Promises, replies you owe and things you're waiting on are found in mail, meetings and chat and proposed as tasks. You accept, edit or dismiss them.</p></div><div class="card"><h3>Nothing goes out without you.</h3><p>SleePO drafts; you send. It never sends an email or a message, and it only reads from your accounts.</p></div><div class="card"><h3>Your data stays yours.</h3><p>It runs on your own Mac, keeps its database there, and uses Claude through your own Claude account.</p></div></div>
+</div></section>
+
+<section id="features"><div class="wrap">
+<h2>What it does</h2>
+<article class="feature solo" id="your-day-on-one-page"><div class="text"><h3>Your day on one page</h3><p>The first page, <strong>Actions</strong>, splits your day in two. On one side, what people are waiting on you for: the emails that need
+a response (the CEO and people outside your company first), the Teams and Slack messages you owe, and the follow-ups from
+your calls, each linked to the moment it was said. On the other, what SleePO recommends you start: the emails it has
+already written for you, the promises you made and haven't kept yet, and the next steps on your bets. One click opens the
+reply, the draft, or a chat with SleePO about it.</p>
+</div></article><article class="feature solo" id="one-list-that-runs-your-week"><div class="text"><h3>One list that runs your week</h3><p>SleePO turns what it reads into tasks filed under your strategic bets (your &quot;initiatives&quot;), each with steps, owners and
+dates. The <strong>Next</strong> view ranks the next step on every task by what matters most to you: the bet's weight, who is involved,
+whether someone is blocked on you, and the date. Suggestions wait for your OK; nothing lands on your list by itself.</p>
+</div></article><article class="feature" id="replies-written-before-you-open-the-email"><div class="text"><h3>Replies written before you open the email</h3><p>Every email that needs a response gets a recommended reply, written in your voice (learned from your own sent mail).
+Change it with one line (&quot;shorter&quot;, &quot;push back on the date&quot;, &quot;warmer&quot;), rewrite just the sentence you select, or answer a
+couple of quick questions to fill in the blanks. When it's right, open it in Outlook and press send yourself.</p>
+</div><figure class="shot"><div class="chrome"><i></i><i></i><i></i></div><img src="screenshots/03-inbox.png" alt="An email with SleePO&#x27;s recommended reply under it" width="1440" height="900" loading="lazy"></figure></article><article class="feature flip" id="walk-into-every-meeting-ready"><div class="text"><h3>Walk into every meeting ready</h3><p>Before each meeting SleePO writes a brief shaped to the meeting: a one-to-one with someone on your team, a catch-up with
+your manager, a customer call or a leadership forum each get the points that matter for that kind of meeting. After the
+call it proposes the follow-ups, each one linked to the moment in the transcript where it was said (the transcript comes
+from <a href="#apps">Granola</a>).</p>
+</div><figure class="shot"><div class="chrome"><i></i><i></i><i></i></div><img src="screenshots/04-meetings.png" alt="The week&#x27;s calendar with a meeting&#x27;s brief open beside it" width="1440" height="900" loading="lazy"></figure></article><article class="feature" id="see-whats-top-of-mind"><div class="text"><h3>See what's top of mind</h3><p>The <strong>Initiatives</strong> page opens on the topics that came up in the last seven days across calls, mail and chat, filed
+under your bets: who raised each topic, where it stands and what is on you. Pin the ones you're working on, open a topic to see
+the latest files and messages on it, and turn any of them into a task in one click.</p>
+</div><figure class="shot"><div class="chrome"><i></i><i></i><i></i></div><img src="screenshots/02-initiatives.png" alt="Top of mind topics and the initiatives they belong to" width="1440" height="900" loading="lazy"></figure></article><article class="feature flip" id="ask-about-anything-youre-looking-at"><div class="text"><h3>Ask about anything you're looking at</h3><p>Press <kbd>⌘</kbd> <kbd>J</kbd> on an email, a person, a meeting or a task and ask. <strong>Ask SleePO</strong> already knows what's on
+screen, searches everything it holds, and answers with sources. It writes emails as cards you edit in place, drafts
+documents, and lays out options when you have a decision to make.</p>
+</div><figure class="shot"><div class="chrome"><i></i><i></i><i></i></div><img src="screenshots/05-assistant.png" alt="Ask SleePO answering a question about the email on screen" width="1440" height="900" loading="lazy"></figure></article><article class="feature" id="teams-and-slack-in-one-place"><div class="text"><h3>Teams and Slack in one place</h3><p>Your direct messages, group chats and channels from both apps in one list, with one conversation per person however
+many apps you use with them. Say what your reply should say, or pick &quot;Agree and confirm next steps&quot;, and SleePO drafts it
+in your voice. When someone shares a deck for review, SleePO checks its claims against what it knows and suggests edits
+you keep or drop.</p>
+</div><figure class="shot"><div class="chrome"><i></i><i></i><i></i></div><img src="screenshots/06-messages.png" alt="A Teams conversation with the Draft a reply bar under it" width="1440" height="900" loading="lazy"></figure></article>
+<h3 class="sub">And more</h3><div class="grid three"><div class="card"><h3>A live call companion.</h3><p>During a recorded call, see the brief next to the transcript as it's spoken and ask &quot;what did they just agree?&quot; (needs <a href="https://granola.ai">Granola</a>).</p></div><div class="card"><h3>Talk instead of typing.</h3><p>Every box where you tell SleePO what you want has a microphone. Click it, say what you want, and <a href="https://github.com/altic-dev/FluidVoice">FluidVoice</a> types it in.</p></div><div class="card"><h3>People first.</h3><p>Every name opens that person's page: their role, your next meeting, your latest exchanges and what you owe each other.</p></div><div class="card"><h3>It remembers what you tell it.</h3><p>Say &quot;never copy finance on early pricing drafts&quot; once and SleePO keeps to it. It learns only from your own words, never from other people's mail, and you can edit or delete anything it remembers.</p></div><div class="card"><h3>It works on its own schedule.</h3><p>A full refresh every weekday morning before you start, and a quick sync every 30 minutes through the working day.</p></div></div>
+</div></section>
+
+<section id="apps" class="soft"><div class="wrap">
+<h2>Recommended: Granola and FluidVoice</h2>
+<div class="intro"><p>SleePO works on its own, and we recommend running it with two other Mac apps: Granola, so SleePO knows what was said in
+your meetings, and FluidVoice, so you can tell SleePO what you want by speaking instead of typing.</p>
+</div>
+<div class="grid two"><div class="card app"><a href="https://granola.ai"><img src="apps/granola.png" alt="Granola app icon" width="128" height="128" loading="lazy" class="appbig"></a><div><p><b><a href="https://granola.ai">Granola</a></b>: meeting notes and transcripts</p><p>
+Granola takes notes on your calls and keeps the transcript. SleePO reads them to know what was said, by whom:
+<ul>
+<li>the follow-ups after each call, each linked to the moment it was said</li>
+<li>the promises made in meetings, which become proposed tasks</li>
+<li>the <b>Top of mind</b> topics, and "last time you met" on each person's page</li>
+<li>briefs that pick up where the last meeting left off</li>
+<li>the live call companion, and the slides that were on screen</li>
+</ul>
+<b>Without it,</b> SleePO still sees your meetings in your calendar, but not what was said in them.</p></div></div><div class="card app"><a href="https://github.com/altic-dev/FluidVoice"><img src="apps/fluidvoice.png" alt="FluidVoice app icon" width="128" height="128" loading="lazy" class="appbig"></a><div><p><b><a href="https://github.com/altic-dev/FluidVoice">FluidVoice</a></b>: dictation that runs on your Mac</p><p>
+Every box where you tell SleePO what you want (Ask SleePO, a reply, a revision, a new task, notes for a meeting brief) has a
+microphone. Click it and speak, and FluidVoice types what you say into the box. Saying "push back on the date, offer the
+twelfth instead, and copy finance" is quicker than typing it, and the more you say, the better the draft. FluidVoice is free
+and open source, and it turns speech into text on your Mac.</p><p>
+<b>Without it,</b> you type your instructions instead.</p></div></div></div>
+</div></section>
+
+<section id="private" class="band"><div class="wrap">
+<h2>Private by design</h2>
+<div class="grid three"><div class="card"><h3>Runs locally</h3><p>The app, its database and your files live on your Mac. There is no SleePO cloud and no account to create.</p></div><div class="card"><h3>Reads, never sends</h3><p>It reads your mail, calendar and chats. It never sends, posts, accepts or deletes anything. Drafts are copied or opened in Outlook for you to send.</p></div><div class="card"><h3>Your Claude account</h3><p>When SleePO drafts or summarises, the text goes to Claude under your own Claude plan, like any conversation you have with Claude.</p></div><div class="card"><h3>Careful with other people's words</h3><p>Mail and messages are written by other people, so SleePO treats them as information, never as instructions. The AI that reads them has no way to send or change anything.</p></div><div class="card"><h3>People matters stay private</h3><p>Topics about people and HR are marked private and kept out of anything it drafts for others.</p></div></div>
+</div></section>
+
+<section id="install"><div class="wrap">
+<h2>Quick start (no coding needed)</h2>
+<div class="intro"><p>You'll need about 20 minutes. You don't need to write any code, because Claude does the installing for you.</p>
+</div>
+<ol class="steps"><li class="step"><span class="num dot"></span><div><h3>What you need</h3><ul>
+<li><strong>A Mac.</strong></li>
+<li><strong>A paid Claude plan that includes Claude Code</strong> (for example Pro or Max). SleePO runs its AI work through Claude Code.</li>
+<li><strong>Your work email and calendar in Apple's Mail and Calendar apps.</strong> Open each app and add your account. SleePO is built
+and tested with Microsoft 365 / Exchange.</li>
+<li><strong>Recommended:</strong> <img src="apps/granola.png" width="16" height="16" alt="" align="middle">
+<a href="https://granola.ai">Granola</a> and <img src="apps/fluidvoice.png" width="16" height="16" alt="" align="middle">
+<a href="https://github.com/altic-dev/FluidVoice">FluidVoice</a> (<a href="#apps">why</a>). If you'd like
+them, install both before you start, and have your Granola API key ready (in Granola: <strong>Settings › API</strong>). FluidVoice needs macOS 15
+Sequoia or later.</li>
+<li><em>Optional:</em> for Teams, Slack and SharePoint, add the Microsoft 365 and Slack connectors to your Claude account.</li>
+</ul>
+</div></li><li class="step numbered"><span class="num">1</span><div><h3>Install Claude Code</h3><p>Open the <strong>Terminal</strong> app (press <kbd>⌘</kbd> <kbd>Space</kbd>, type <em>Terminal</em>, press <kbd>Return</kbd>), paste this
+line and press <kbd>Return</kbd>:</p>
+<div class="code"><button type="button" class="copy">Copy</button><pre><code class="language-sh">curl -fsSL https://claude.ai/install.sh | bash
+</code></pre></div>
+<p>Then type <code>claude</code> and press <kbd>Return</kbd>, and sign in with your Claude account when it asks.
+(Already have Claude Code? Skip this step.)</p>
+</div></li><li class="step numbered"><span class="num">2</span><div><h3>Let Claude install SleePO</h3><p>Paste the text below into Claude Code and press <kbd>Return</kbd>:</p>
+<div class="code"><button type="button" class="copy">Copy</button><pre><code class="language-text">Please install SleePO on this Mac for me. I don't write code, so do each step yourself and tell me
+exactly what to click whenever you need me.
+
+1. Download the code from https://github.com/samattias/sleepo into a new folder called
+   &quot;SleePO-app&quot; in my home folder. It must not be inside OneDrive, iCloud Drive or Dropbox.
+   If GitHub asks me to sign in, help me do that.
+2. Run its installer, scripts/install.sh, and fix anything it says is missing (for example
+   Apple's Command Line Tools).
+3. Check whether Granola and FluidVoice are in my Applications folder. They're recommended,
+   not required: if either is missing, tell me what it adds and give me its download page
+   (https://granola.ai, https://github.com/altic-dev/FluidVoice), then wait while I decide.
+4. Open SleePO by double-clicking &quot;Open SleePO.command&quot; in the new SleePO folder in my home folder.
+5. Stay with me through the setup screen that opens in my browser, including giving Python
+   Full Disk Access in System Settings so SleePO can read Mail and Calendar, and adding my
+   Granola API key.
+6. Then run SleePO's Granola sign-in (assist.cli granola-login) so it can see the slides shown
+   in my calls and follow a call live.
+
+Don't change any of SleePO's code or settings unless I ask you to.
+</code></pre></div>
+<p>Claude will ask before it runs each command. Read what it says and approve the steps.</p>
+</div></li><li class="step numbered"><span class="num">3</span><div><h3>Follow SleePO's setup</h3><p>SleePO opens in your browser at <code>http://localhost:8765</code> and walks you through four short steps:</p>
+<ol>
+<li><strong>Connect.</strong> Check that Claude Code works, give Python <em>Full Disk Access</em> (the page has a button that opens the right
+place in System Settings), add your Granola key, try FluidVoice, and optionally the Teams and Slack connectors.
+Granola and FluidVoice are marked <em>Recommended</em>, with a button to get each one if it isn't installed yet.</li>
+<li><strong>Read.</strong> SleePO imports your recent mail, calendar and meeting notes. This takes a few minutes, and you can watch each fact
+appear as it's found.</li>
+<li><strong>Review.</strong> SleePO works out who you are: your title, your manager, your team, the people you work with most, your
+priorities and when you usually meet. It asks you a few questions, and you correct anything it got wrong.</li>
+<li><strong>Done.</strong> Your first morning refresh runs the next working day. To start straight away, press <strong>Refresh</strong>.</li>
+</ol>
+<p>In the Connect step, FluidVoice's row has a box to try it. The first time you click its microphone, macOS asks whether
+Python may control your computer (<strong>Accessibility</strong>). Allow it: that is how SleePO starts and stops FluidVoice for you.
+FluidVoice's own settings decide its shortcut, and SleePO follows it.</p>
+</div></li><li class="step"><span class="num dot"></span><div><h3>Every day after that</h3><p>Double-click <strong>Open SleePO</strong> in your SleePO folder (or keep the tab open). Start on <strong>Actions</strong> for what's waiting on you
+and what SleePO suggests, check <strong>Inbox</strong> for the drafted replies, and open a meeting on <strong>Meetings</strong> to read its brief. Press <kbd>⌘</kbd> <kbd>J</kbd> any time to ask
+SleePO something.</p>
+</div></li></ol>
+<p class="more-link">The full guide, with what to do when something goes wrong, is in the <a href="https://github.com/samattias/sleepo#quick-start-no-coding-needed">README on GitHub</a>.</p>
+</div></section>
+<section id="new" class="soft"><div class="wrap">
+<h2>What's new</h2>
+<div class="changes"><div class="change"><h3>25 Nov 2026</h3><ul>
+<li><strong>Actions, the new first page.</strong> What people are waiting on you for (emails that need a response, Teams and Slack messages
+you owe, follow-ups from your calls) beside what SleePO recommends you start (emails it has written, promises you made,
+next steps). It replaces the dashboard.</li>
+<li><strong>Follow-ups from your calls work again.</strong> An update on 16 Nov stopped them being written after each meeting.</li>
+<li><strong>Granola and FluidVoice are recommended at install.</strong> The installer and the doctor check say when either is missing,
+and what you lose without it.</li>
+</ul>
+</div><div class="change"><h3>23 Nov 2026</h3><ul>
+<li><strong>Ask SleePO can sort out files for you.</strong> It makes folders, copies, moves and renames files, downloads a file from
+SharePoint or OneDrive and opens it. It shows each step first and does only the ones you allow.</li>
+<li><strong>Continue in Claude Desktop</strong> opens the conversation's own folder, so Claude sees the conversation and its sources.</li>
+</ul>
+</div><div class="change"><h3>20 Nov 2026</h3><ul>
+<li><strong>Your company's code, when a question needs it.</strong> If your company's git repositories are on your Mac, SleePO can search
+them to answer how the product behaves (roles, settings, limits), after the emery yates and product docs.
+See <strong>Knowledge › Product › Code base</strong>.</li>
+</ul>
+</div></div>
+<p class="more-link"><a href="https://github.com/samattias/sleepo/blob/main/CHANGELOG.md">Everything that changed</a></p>
+</div></section>
+<section id="faq"><div class="wrap narrow">
+<h2>Questions</h2>
+<details><summary>Does it ever send anything?</summary><p>No. It writes drafts. You copy them, or open them in Outlook and send them yourself.</p></details><details><summary>Does it change my mailbox or calendar?</summary><p>No. SleePO reads Mail and Calendar without changing them, and it uses the Claude connectors for Teams, Slack and SharePoint only to read. The one exception is a draft you choose to save into Outlook.</p></details><details><summary>What does it cost?</summary><p>There's no SleePO subscription. Its AI work counts towards your Claude plan's usage. <strong>System › Agents</strong> shows every background job, when it ran and what it cost.</p></details><details><summary>Do I need Granola and FluidVoice?</summary><p>No, SleePO runs without them, but we recommend both. Granola lets SleePO know what was said in your meetings: the follow-ups after each call, the promises made in meetings and fuller briefs. FluidVoice lets you speak your instructions instead of typing them. Granola has its own plans and pricing; FluidVoice is free.</p></details><details><summary>Does it work on Windows or with Gmail?</summary><p>It's built for a Mac with Apple Mail and Calendar, and it's tested with Microsoft 365. Other accounts in Apple Mail may work, but they haven't been tested.</p></details><details><summary>Where is my data?</summary><p>Your notes and settings are in the SleePO folder in your home folder. The database is in <code>~/Library/Application Support/Assist</code>. To remove SleePO, quit it and delete those two folders and the <code>SleePO-app</code> folder.</p></details><details><summary>Something isn't working.</summary><p>Open Claude Code in the SleePO-app folder and describe what you see. Claude can run <code>~/.assist/venv/bin/python -m assist.cli doctor</code>, which checks the install and says what's missing.</p></details>
+</div></section>
+<section class="final"><div class="wrap">
+<h2>A chief of staff that works while you sleep.</h2>
+<div class="actions"><a class="btn dark lg" href="#install">Install on your Mac</a><a class="btn outline-dark lg" href="https://github.com/samattias/sleepo"><svg class="gh" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>View on GitHub</a></div>
+</div></section>
+</main>
+<footer><div class="wrap foot">
+<span class="brand small"><img src="logo.svg" alt="" width="20" height="20"><span>SleePO</span></span>
+<span>Code only, no data · <a href="https://github.com/samattias/sleepo/blob/main/LICENSE">MIT licence</a> · Updated 26 Nov 2026</span>
+<a href="https://github.com/samattias/sleepo">GitHub</a>
+</div></footer>
+<script>
+(function () {   // sections rise into view as you scroll
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var els = document.querySelectorAll('main section:not(.hero) h2, .intro, .card, .feature, .step, .change, details, h3.sub');
+  var io = new IntersectionObserver(function (seen) {
+    seen.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+  els.forEach(function (el) {   // cards in a row follow one another
+    var same = Array.prototype.filter.call(el.parentElement.children, function (c) { return c.className === el.className; });
+    var i = same.indexOf(el);
+    if (i > 0) el.style.transitionDelay = Math.min(i, 5) * 80 + 'ms';
+  });
+  els.forEach(function (el) { el.classList.add('reveal'); io.observe(el); });
+})();
+document.querySelectorAll('.code .copy').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var t = b.nextElementSibling.innerText;
+    var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1600); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(done, function () {});
+  });
+});
+</script>
+</body>
+</html>

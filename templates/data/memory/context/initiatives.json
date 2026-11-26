@@ -1,0 +1,5 @@
+{
+  "_about": "Your initiatives (bets): the seed for the initiatives table (assist.cli import-legacy applies it). One object each: slug, name, weight (1-5), goal, owner, key_people, themes, files, regex.",
+  "initiatives": [],
+  "folds": []
+}
