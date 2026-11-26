@@ -6,7 +6,7 @@ chat, meetings, calendar, documents and Salesforce, and prep, the brief and sear
 How each link is made (strongest first; confidence in brackets):
 - People: email addresses on mail (from/to/cc) and calendar invites, resolved through people_aliases (1.0); the sender
   already resolved at ingest (1.0); chat authors by full name (0.9); a meeting inherits its calendar event's people (1.0).
-  A name written in the text: a full name or another full name they go by (KNOWN_ALIASES: Quinn Dalton, Sage Gilmore) anywhere (0.7); a first name only when one person has it and it is not an ordinary word, in notes, chats,
+  A name written in the text: a full name or another full name they go by (KNOWN_ALIASES: Marlow Carver, Jules Upton) anywhere (0.7); a first name only when one person has it and it is not an ordinary word, in notes, chats,
   invites and subject lines (0.6). Never "Glen" or "Finley": the company has four Daniels and two Scotts. Shared mailboxes
   (jira@, gitlab@, lists) are nobody's alias; the person named on a Jira or GitLab notification is a hint only (0.5).
 - Organisations: Salesforce accounts become orgs (kind 'account'); an opportunity links to its account (1.0). External
@@ -262,7 +262,7 @@ def sync_aliases(con, log=print):
         local = ascii_name(a.split("@")[0])
         for key in (local, re.sub(r"\.([a-z])[a-z]*\.", r".", local)):   # first.middle.last
             pids = by_local.get(key) or set()
-            if not pids and alias.get(key.replace(".", " ")):   # noel.barker@ for someone also known as Noel Barker
+            if not pids and alias.get(key.replace(".", " ")):   # marlow.warrick@ for someone also known as Marlow Warrick
                 pids = {alias[key.replace(".", " ")]}
             if len(pids) == 1:
                 con.execute("INSERT OR IGNORE INTO people_aliases (alias, person_id) VALUES (?, ?)", (a, next(iter(pids))))
@@ -370,7 +370,7 @@ def link(con, full=False, log=print):
             pid = full_names.get(re.sub(r"@.*$", "", k).replace(".", " ").replace("_", " "))
         return pid if pid and pid != me else None
 
-    # Names that can be found in text: every full name and other full-length name (Quinn Dalton, Dale
+    # Names that can be found in text: every full name and other full-length name (Marlow Carver, Dale
     # Bristow), and a first name as written ("Noel") when only one person has it and it is not an ordinary word.
     note_names = {n: pid for n, pid in alias.items() if "@" not in n and " " in n and pid != me}
     firsts = {}
@@ -408,7 +408,7 @@ def link(con, full=False, log=print):
         m |= titles[key]
     members = {k: {p for p in v if p} for k, v in members.items()}
 
-    # Documents (working files: SharePoint/OneDrive and local; not the product docs or the emery yates). A document is
+    # Documents (working files: SharePoint/OneDrive and local; not the product docs or the knowledge base). A document is
     # linked to its owner, to whoever shared it in a chat or an email (file name or link title), and to the initiative it
     # is filed under; the chat, email or meeting that shared or named it is linked to the document (entity_type 'doc').
     docs_by_name, doc_rows = {}, {}
@@ -534,7 +534,7 @@ def link(con, full=False, log=print):
         if it["kind"] == "note" and doc_title_re is not None:   # a meeting's notes name a document
             for hit in set(doc_title_re.findall((it["text"] or "")[:20000].lower())):
                 add("doc", doc_titles[hit], 0.6, "mentioned", around(it["text"] or "", hit))
-        # Names written in it. Full names (and other full names: Quinn Dalton) anywhere in a note, chat or invite, in an
+        # Names written in it. Full names (and other full names: Marlow Carver) anywhere in a note, chat or invite, in an
         # email's subject or body, a document's title; a first name only one person has in a note, a chat or a subject line.
         if not WARNING.match(it["subject"] or ""):
             scope = it["subject"] or "" if it["kind"] in ("doc", "opportunity") else text[:20000]

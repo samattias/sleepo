@@ -351,7 +351,7 @@ def eval_links(con, log=print, record=True):
     out["recall"] = {"confirmed": r["n"] or 0, "found_and_shown": r["found"] or 0, "hidden_right": r["hidden"] or 0,
                      "recall": round((r["found"] or 0) / r["n"], 3) if r["n"] else None}
     # a meeting's initiatives are tagged on the meeting (ref_type 'meeting'); "doc" counts working documents only
-    # (SharePoint/OneDrive, local), not the product help pages or the emery yates, which are about no one in particular
+    # (SharePoint/OneDrive, local), not the product help pages or the knowledge base, which are about no one in particular
     on = lambda t: (f"EXISTS(SELECT 1 FROM mentions m WHERE m.ref_type='item' AND m.ref_id=i.id AND m.entity_type='{t}' AND "
                     f"(m.verdict='confirmed' OR (m.verdict IS NULL AND m.confidence >= 0.6)))"
                     + (" OR EXISTS(SELECT 1 FROM meetings mt JOIN mentions m ON m.ref_type='meeting' AND m.ref_id=mt.id AND m.entity_type='initiative' "

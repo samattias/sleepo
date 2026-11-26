@@ -1,4 +1,4 @@
-"""Import the Acme emery yates (the Obsidian vault published at kb.svc.staging.acmecloud.com).
+"""Import the Acme knowledge base (the Obsidian vault published at kb.svc.staging.acmecloud.com).
 
 Source id 'acme-kb'. One item per note (kind 'doc', full text kept: the KB is org-public), external_id = vault path.
 The vault copy lives in Documents/acme-kb; the staging site itself sits behind Entra ID login, so the local copy is
@@ -14,7 +14,7 @@ from pathlib import Path
 from . import db
 from . import org
 
-_KB = org.section("kb", {})   # the org pack: the company emery yates
+_KB = org.section("kb", {})   # the org pack: the company knowledge base
 DEFAULT_VAULT = db.ASSIST.parent / (_KB.get("folder") or "kb")
 FM = re.compile(r"^---\n(.*?)\n---\n", re.S)
 
@@ -23,8 +23,8 @@ def import_kb(con, vault=None):
     vault = Path(vault) if vault else DEFAULT_VAULT
     if not vault.exists():
         raise SystemExit(f"vault not found: {vault}")
-    db.upsert_source(con, {"id": "acme-kb", "system": "acme-kb", "name": _KB.get("name") or "Emery Yates", "vendor": _KB.get("vendor") or org.name(),
-                           "kind": "Org emery yates: people, roadmap, products, tech stack, processes",
+    db.upsert_source(con, {"id": "acme-kb", "system": "acme-kb", "name": _KB.get("name") or "Knowledge base", "vendor": _KB.get("vendor") or org.name(),
+                           "kind": "Org knowledge base: people, roadmap, products, tech stack, processes",
                            "how": f"Local copy of the Obsidian vault behind {_KB.get('site')} (Entra ID login). Imported file by file; the "
                                   f"'{_KB.get('connector')}' MCP connector can refresh it from the live site once authenticated.",
                            "auth": "Entra ID on the site; MCP connector OAuth", "connect": "Local vault imported; live refresh via MCP pending authentication",
@@ -55,7 +55,7 @@ def import_kb(con, vault=None):
                                     thread=rel, url=f"https://{_KB.get('site')}/" + rel.replace(" ", "%20").replace(".md", ""),
                                     payload={"frontmatter": meta, "bytes": len(raw)}, retention="general")
         n_new += created
-        db.upsert_document(con, "kb/" + rel, "Emery Yates", title, body, "acme-kb/" + rel, meta)
+        db.upsert_document(con, "kb/" + rel, "Knowledge base", title, body, "acme-kb/" + rel, meta)
     db.finish_pull(con, pull, available=len(files), pulled=len(files))
     con.execute(f"UPDATE sources SET window_from='{_KB.get('since') or ''}', window_to=?, note=? WHERE id='acme-kb'",
                 (newest[:10] if newest else None, f"{len(files)} notes imported from the local vault; newest dated {newest[:10] if newest else '—'}. "

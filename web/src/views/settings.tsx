@@ -233,7 +233,7 @@ export function Personalisation() {
             {d.org.pack_exists && <p className="mt-1 text-ink3">{[
               d.org.has.org_chart ? `org chart (${d.org.has.org_chart} managers)` : '', d.org.has.known_people ? `${d.org.has.known_people} known contacts` : '',
               d.org.has.products ? `${d.org.has.products} products` : '', d.org.has.jira_projects ? `Jira (${d.org.has.jira_projects} projects)` : '',
-              d.org.has.crm ? 'CRM' : '', d.org.has.roadmap ? 'roadmap' : '', d.org.has.kb ? 'emery yates' : '',
+              d.org.has.crm ? 'CRM' : '', d.org.has.roadmap ? 'roadmap' : '', d.org.has.kb ? 'knowledge base' : '',
               d.org.has.noise_senders || d.org.has.shared_mailboxes ? 'mail rules' : ''].filter(Boolean).join(' · ')}</p>}
           </div>
           <Row f={{ key: 'org_name', label: 'Company name', help: 'Only to call it something other than the pack does.' }} value={orgName} onChange={setOrgName} fallback={d.org.name} />

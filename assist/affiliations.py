@@ -2,7 +2,7 @@
 
 Employees come from the org chart (the BambooHR extract is the list of current staff); an Acme person not on it has left,
 unless Sam says otherwise (Sam, 12 Oct 2026). Someone Sam says has left is a former employee even while the last export
-still lists them: they come off the org chart (not active, no org source, no manager), so they leave his team counts. Everyone else is set from what the meetings, mail and emery yates say;
+still lists them: they come off the org chart (not active, no org source, no manager), so they leave his team counts. Everyone else is set from what the meetings, mail and knowledge base say;
 unknowns default to 'unclassified' so they are visible rather than guessed.
 
   assist classify-people

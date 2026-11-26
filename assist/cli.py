@@ -2,7 +2,7 @@
 
   assist migrate                 create or upgrade the database
   assist import-legacy           load everything the prototype collected (idempotent)
-  assist import-kb [vault]       import the Acme emery yates vault (default Documents/acme-kb)
+  assist import-kb [vault]       import the Acme knowledge base vault (default Documents/acme-kb)
   assist ingest <file.json>...   load an ingest bundle written by an agent (see ingest.py); default: inbox/queue/*.json
   assist calendar-merge <pull.json>   merge a calendar pull {"window", "events"} into inbox/calendar/events.json (replace by id)
   assist todo                    regenerate the prioritised Actions list (headless Claude, no tools)
@@ -52,7 +52,7 @@
   assist loops [sync|review|extract|dedupe|all]   the open-items register: sync from sources, evidence review, new commitments/decisions, reworded duplicates
   assist brief                   write today's brief from the database (tool-free run) and ingest it
   assist sp-index [--since ISO]   index SharePoint/OneDrive files changed since the last index, by topic (assist/sp_index.py)
-  assist kb-sync [--repo NAME]    read the emery yates and product docs repositories in full through the connector (assist/kb_sync.py)
+  assist kb-sync [--repo NAME]    read the knowledge base and product docs repositories in full through the connector (assist/kb_sync.py)
   assist sp-read-list [--limit N] recent SharePoint/OneDrive files to read in full (for /docs-read)
   assist sp-text <file.json>     store text read through the connector: [{"item_id", "text"}]
   assist doc-cards [--force]     Claude writes a card (summary, facts, initiatives, version, sensitivity) for each document worth reading
@@ -151,7 +151,7 @@ def main(argv=None):
     elif cmd == "import-kb":
         from . import kb
         total, new = kb.import_kb(con, argv[1] if len(argv) > 1 else None)
-        print(f"emery yates: {total} notes ({new} new)")
+        print(f"knowledge base: {total} notes ({new} new)")
     elif cmd == "import-orgchart":
         from . import orgchart
         n, links = orgchart.import_orgchart(con, argv[1] if len(argv) > 1 else str(Path.home() / "Downloads" / "org_chart.pdf"))
@@ -265,7 +265,7 @@ def main(argv=None):
         modified = argv[argv.index("--modified") + 1] if "--modified" in argv else None
         r = roadmap.import_tsv(con, roadmap.TSV, modified, force="--force" in argv)
         print(roadmap.note(r))
-    elif cmd == "kb-sync":   # the emery yates and product docs, every note read through the connector (assist/kb_sync.py; weekly)
+    elif cmd == "kb-sync":   # the knowledge base and product docs, every note read through the connector (assist/kb_sync.py; weekly)
         from . import kb_sync, llm
         ok, _ = kb_sync.run(only=argv[argv.index("--repo") + 1] if "--repo" in argv else None,
                             on_result=lambda ev: llm.record_stream_result(ev, "kb-sync"))
@@ -419,6 +419,17 @@ def main(argv=None):
         elif len(argv) >= 3 and argv[1] == "unset":
             mod.save(con, **{argv[2]: None})
         print(json.dumps(mod.get(con) if cmd == "org" else mod.complete(mod.from_db(con)), indent=2, ensure_ascii=False))
+    elif cmd == "version":   # this code's release (VERSION, written by the export), or a development copy (assist/updates.py)
+        from . import updates
+        print(updates.current() or "development copy")
+    elif cmd == "update":   # updates from GitHub releases (assist/updates.py): --check asks now; else install [--to TAG] [--no-restart]
+        from . import updates
+        if "--check" in argv:
+            updates.check(force=True)
+            print(updates.describe(updates.status(con)))
+        else:
+            tag = argv[argv.index("--to") + 1] if "--to" in argv and argv.index("--to") + 1 < len(argv) else None
+            sys.exit(0 if updates.update(tag, log=lambda x: print(x, flush=True), restart="--no-restart" not in argv) else 1)
     elif cmd == "restart":   # restart the server to load code changes; waits for a running refresh and Ask SleePO answers unless --now
         import json as _j
         import time as _t

@@ -134,7 +134,7 @@ PULL_PROMPTS = {
     "salesforce": ("Morning refresh, SALESFORCE pull. " + _PULL_RULES +
                    "Run the /salesforce skill to refresh open pipeline and closed deals (company and deal data only)."),
 }
-PULL_PHASE = {"mail": "Mail (Claude)", "salesforce": "Salesforce", "chat": "Calendar, Teams, Slack", "kb": "Emery Yates"}
+PULL_PHASE = {"mail": "Mail (Claude)", "salesforce": "Salesforce", "chat": "Calendar, Teams, Slack", "kb": "Knowledge base"}
 PULL_MODEL = "sonnet"   # mechanical fetching: a lighter, faster model than the analysis steps
 # Calendar.app delivered the calendar (assist/applecal.py): the chat pull leaves it out
 PULL_PROMPTS["chat-nocal"] = PULL_PROMPTS["chat"].replace("CALENDAR, TEAMS AND SLACK pull", "TEAMS AND SLACK pull").replace(
@@ -218,9 +218,9 @@ def log(line):
 
 # ---- refresh progress: named phases, each timed; past runs give the estimate for the next one
 PHASES = {"sync": ["Calendar", "Granola meetings", "Local files", "Mail sync", "Documents", "Open items"],
-          "full": ["Calendar", "Granola meetings", "Local files", "Mail sync", "Mail (Claude)", "Salesforce", "Emery Yates",
+          "full": ["Calendar", "Granola meetings", "Local files", "Mail sync", "Mail (Claude)", "Salesforce", "Knowledge base",
                    "Calendar, Teams, Slack", "Linking", "Documents", "Open items", "Initiatives", "Top of mind", "Tasks", "Meeting prep", "Meeting follow-ups"]}
-DEFAULT_SECS = {"Calendar": 5, "Granola meetings": 40, "Local files": 20, "Mail sync": 30, "Mail (Claude)": 180, "Salesforce": 90, "Emery Yates": 300,
+DEFAULT_SECS = {"Calendar": 5, "Granola meetings": 40, "Local files": 20, "Mail sync": 30, "Mail (Claude)": 180, "Salesforce": 90, "Knowledge base": 300,
                 "Calendar, Teams, Slack": 150, "Linking": 10, "Documents": 60, "Open items": 150, "Initiatives": 90, "Top of mind": 120, "Tasks": 100,
                 "Meeting prep": 180, "Meeting follow-ups": 150, "sync:Open items": 2}   # mode:phase overrides a phase that differs by mode
 HISTORY = db.db_path().parent / "refresh_history.json"
@@ -478,7 +478,7 @@ def refresh(mode):
         if "salesforce" not in jobs:
             phase_set("Salesforce", "skipped")
             log("Salesforce: pulled within the last week, skipped (settings salesforce_every_days)")
-        from . import kb_sync   # the emery yates and product docs, weekly (assist/kb_sync.py)
+        from . import kb_sync   # the knowledge base and product docs, weekly (assist/kb_sync.py)
         c = con()
         try:
             kb_due = kb_sync.due(c)
@@ -487,8 +487,8 @@ def refresh(mode):
         if kb_due:
             jobs.append("kb")
         else:
-            phase_set("Emery Yates", "skipped")
-            log("Emery Yates: read within the last week, skipped")
+            phase_set("Knowledge base", "skipped")
+            log("Knowledge base: read within the last week, skipped")
         results = {}
 
         def pull(key):
@@ -1584,6 +1584,8 @@ from .routes import graph_memory as _graph_memory  # noqa: E402  (DESIGN-GRAPH-M
 app.include_router(_graph_memory.router)
 from .routes import codebase as _codebase_routes  # noqa: E402  (Knowledge › Product › Code base, assist/codebase.py)
 app.include_router(_codebase_routes.router)
+from .routes import updates as _updates_routes  # noqa: E402  (Check for updates / Update now, assist/updates.py)
+app.include_router(_updates_routes.router)
 PREP_JOBS = _meetings.PREP_JOBS   # the Agents page's view of running meeting briefs
 
 

@@ -122,7 +122,7 @@ def _rows(con):
                    {"sub": f"shared in {r['conversation_name'] or 'a chat'}"})
     except Exception:
         pass
-    pre = {"sharepoint": ("sp", "SharePoint"), "acme-kb": ("kb", "Emery Yates"), "local": ("lf", "This Mac")}
+    pre = {"sharepoint": ("sp", "SharePoint"), "acme-kb": ("kb", "Knowledge base"), "local": ("lf", "This Mac")}
     for r in con.execute("SELECT * FROM items WHERE kind='doc' AND source_id IN ('sharepoint', 'acme-kb', 'local')"):
         p, label = pre[r["source_id"]]
         yield ("document", f"{p}-{r['id']}", r["subject"] or "(untitled)", _clean(r["text"])[:BODY_MAX], r["from_name"] or "", f"{label} {r['thread'] or ''}",

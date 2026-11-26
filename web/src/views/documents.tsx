@@ -1,4 +1,4 @@
-// Documents: every file Assist pulls in from outside (this Mac, SharePoint/OneDrive, the emery yates, email and chat
+// Documents: every file Assist pulls in from outside (this Mac, SharePoint/OneDrive, the knowledge base, email and chat
 // attachments), as a file browser like Finder or Google Drive: on the left, folders by meaning (recent, Sam's initiatives,
 // document types, sensitive, sources); in the middle the list (thumbnail, Claude's one-line summary, source, initiative);
 // on the right the document card (what it is, key facts, decisions, people, folder, versions) above a preview.
@@ -17,7 +17,7 @@ import { TZ, LOCALE } from '@/lib/time'
 import { AssistPill } from '@/components/AssistPill'
 import { documentPill } from '@/lib/assistPills'
 
-const ORIGIN_LABEL: Record<string, string> = { local: 'This Mac', sharepoint: 'SharePoint', email: 'Email attachment', kb: 'Emery Yates', teams: 'Teams file', slack: 'Slack file' }
+const ORIGIN_LABEL: Record<string, string> = { local: 'This Mac', sharepoint: 'SharePoint', email: 'Email attachment', kb: 'Knowledge base', teams: 'Teams file', slack: 'Slack file' }
 const TYPES: { key: string; label: string; exts: string[]; icon: typeof FileText }[] = [
   { key: 'slides', label: 'Decks', exts: ['ppt', 'pptx', 'key', 'odp'], icon: Presentation },
   { key: 'word', label: 'Docs', exts: ['doc', 'docx', 'rtf', 'odt', 'pages'], icon: FileText },
@@ -44,11 +44,11 @@ const TYPE_FOLDERS: { key: string; label: string; kinds: string[] }[] = [
 const SOURCE_FOLDERS: { key: string; label: string; origins: DocItem['origin'][] }[] = [
   { key: 'local', label: 'This Mac', origins: ['local'] }, { key: 'sharepoint', label: 'SharePoint & OneDrive', origins: ['sharepoint'] },
   { key: 'email', label: 'Email attachments', origins: ['email'] }, { key: 'chat', label: 'Teams & Slack', origins: ['teams', 'slack'] },
-  { key: 'kb', label: 'Emery Yates', origins: ['kb'] },
+  { key: 'kb', label: 'Knowledge base', origins: ['kb'] },
 ]
 const MEDIA = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'heic', 'mp3', 'm4a', 'wav', 'mp4', 'mov', 'zip'])
 const media = (d: DocItem) => MEDIA.has(d.ext)   // screenshots, recordings and archives shared in chats: their own folder
-// the emery yates is reference material and media are not documents: both have their own folder, not the working list
+// the knowledge base is reference material and media are not documents: both have their own folder, not the working list
 const working = (d: DocItem) => d.origin !== 'kb' && !media(d)
 const sensitive = (d: DocItem) => d.folder?.sensitivity === 'hr-legal' || d.folder?.sensitivity === 'personal'
 const recentCut = () => new Date(Date.now() - RECENT_DAYS * 864e5).toISOString()
@@ -198,7 +198,7 @@ function Preview({ d, iniName, onBack, onPick, all }: { d: DocItem; iniName: Map
         {d.origin === 'local' && <><button onClick={() => local(false)} className={primary}><ExternalLink size={13} />Open</button>
           <button onClick={() => local(true)} className={btn}><FolderOpen size={13} />Show in Finder</button></>}
         {d.origin === 'sharepoint' && d.url && <a href={d.url} target="_blank" rel="noopener" className={primary}><ExternalLink size={13} />Open in SharePoint</a>}
-        {d.origin === 'kb' && d.url && <a href={d.url} target="_blank" rel="noopener" className={btn}><ExternalLink size={13} />Open in emery yates</a>}
+        {d.origin === 'kb' && d.url && <a href={d.url} target="_blank" rel="noopener" className={btn}><ExternalLink size={13} />Open in knowledge base</a>}
         {d.origin === 'email' && <>{d.open_url && <a href={d.open_url} target="_blank" rel="noopener" className={primary}><ExternalLink size={13} />Open in {d.open_where || 'Outlook'}</a>}
           {d.mail_id && <Link to="/inbox" search={{ open: d.mail_id }} className={btn}><Mail size={13} />Show the email</Link>}</>}
         {(d.origin === 'teams' || d.origin === 'slack') && d.url && <a href={d.url} target="_blank" rel="noopener" className={btn}><ExternalLink size={13} />Open in {d.origin === 'teams' ? 'Teams' : 'Slack'}</a>}

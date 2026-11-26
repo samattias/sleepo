@@ -2,7 +2,7 @@
 without re-reading them.
 
 Which documents: files with extracted text that are worth understanding (local files from Downloads/Desktop/Documents,
-email attachments, and SharePoint files once their full text is read). The public product docs and the emery yates are
+email attachments, and SharePoint files once their full text is read). The public product docs and the knowledge base are
 reference material: search covers them, so they get no card.
 
 A card: type, clean title, a two-sentence summary, key facts and figures, decisions or commitments in it, people and

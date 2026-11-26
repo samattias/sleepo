@@ -23,14 +23,14 @@ export function viewText(v: View) { window.dispatchEvent(new CustomEvent<View>('
 
 export function viewDoc(d: DocItem) {
   const textUrl = d.origin === 'email' ? d.ref : ['kb', 'sharepoint', 'local'].includes(d.origin) ? `/api/documents/${d.id}/text` : null
-  const where = d.origin === 'local' ? 'This Mac' : d.origin === 'kb' ? 'Emery Yates' : d.origin === 'sharepoint' ? 'SharePoint' : d.origin === 'email' ? 'Email attachment' : d.origin
+  const where = d.origin === 'local' ? 'This Mac' : d.origin === 'kb' ? 'Knowledge base' : d.origin === 'sharepoint' ? 'SharePoint' : d.origin === 'email' ? 'Email attachment' : d.origin
   viewText({
     title: d.name, sub: [where, d.where].filter(Boolean).join(' · '), textUrl, md: d.ext !== 'txt' && d.ext !== 'text',
     fallback: d.preview || undefined,
     actions: d.origin === 'local' ? [{ label: 'Show in Finder', run: () => { fetch(`/api/local/${d.id.slice(3)}/open?reveal=1`, { method: 'POST' }) } }]
       : d.origin === 'email' ? [...(d.open_url ? [{ label: `Open in ${d.open_where || 'Outlook'} ↗`, href: d.open_url }] : []), ...(d.mail_id ? [{ label: 'Show the email', href: `#/inbox?open=${d.mail_id}` }] : [])]
       : d.url && d.origin !== 'kb' ? [{ label: d.origin === 'sharepoint' ? 'Open in SharePoint ↗' : 'Open ↗', href: d.url }]
-      : d.origin === 'kb' && d.url ? [{ label: 'Open in emery yates ↗', href: d.url }] : [],
+      : d.origin === 'kb' && d.url ? [{ label: 'Open in knowledge base ↗', href: d.url }] : [],
   })
 }
 

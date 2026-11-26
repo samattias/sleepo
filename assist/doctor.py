@@ -34,6 +34,10 @@ def checks():
 
     same = db.ASSIST == db.APP
     add("ok", f"Code {db.APP}" + ("" if same else f"; data {db.ASSIST}"))
+    from . import updates   # the release this code is (VERSION), and whether it can update itself from GitHub
+    why = updates.blocked()
+    add("ok" if not why or not updates.current() else "warn", f"SleePO {updates.current() or '(development copy)'}",
+        "" if not why or not updates.current() else why)
     if not db.ASSIST.exists():
         add("fail", f"Data folder {db.ASSIST} is missing", "Run scripts/install.sh, or fix ~/.assist/home.")
     missing = [p for p in PAGES if not (db.ASSIST / p).exists()]

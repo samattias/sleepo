@@ -275,7 +275,7 @@ def on_the_table(con, pid, name, limit=5):
     uniq = [n.split(" ")[0].lower() for (n,) in con.execute("SELECT name FROM people")].count(first) == 1
 
     def is_them(n):
-        n = re.sub(r"\s*\(.*\)$", "", (n or "").strip()).lower()   # "Nell Harlow (塩谷 晴久)"
+        n = re.sub(r"\s*\(.*\)$", "", (n or "").strip()).lower()   # "Eden Vance (塩谷 晴久)"
         return bool(n) and n != "you" and (n in names or (uniq and n.split(" ")[0] == first))
 
     out = []

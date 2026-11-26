@@ -2,6 +2,12 @@
 
 Newest first. The website shows the latest three.
 
+## 26 Nov 2026
+- **Updates from inside SleePO.** SleePO checks GitHub for a new version once a day and puts a dot on your picture when
+  one is out. **Check for updates** is in the menu under your picture; **Update now** backs up the database, installs the
+  new version and restarts. Nothing changes until you click, and your data stays as it is.
+- **Open source.** The code is on GitHub under the MIT licence, and the website is at sleepo.ai.
+
 ## 25 Nov 2026
 - **Actions, the new first page.** What people are waiting on you for (emails that need a response, Teams and Slack messages
   you owe, follow-ups from your calls) beside what SleePO recommends you start (emails it has written, promises you made,
@@ -17,7 +23,7 @@ Newest first. The website shows the latest three.
 
 ## 20 Nov 2026
 - **Your company's code, when a question needs it.** If your company's git repositories are on your Mac, SleePO can search
-  them to answer how the product behaves (roles, settings, limits), after the emery yates and product docs.
+  them to answer how the product behaves (roles, settings, limits), after the knowledge base and product docs.
   See **Knowledge › Product › Code base**.
 
 ## 19 Nov 2026

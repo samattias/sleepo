@@ -206,7 +206,7 @@ export function PersonPage({ id, tab }: { id: string; tab?: PersonTab }) {
 
 // ---------------------------------------------------------------- Library
 // people first: they are the main entities, everything else is reached through them (DESIGN.md §3.1)
-const LIB_ORDER = ['People', 'Context', 'Initiatives', 'Emery Yates', 'Product docs', 'Briefs', 'Weekly reviews', 'Commitments', 'Decisions', 'Analyses', 'Pulls', 'Digests', 'Drafts', 'Memory', 'System', 'Meetings']
+const LIB_ORDER = ['People', 'Context', 'Initiatives', 'Knowledge base', 'Product docs', 'Briefs', 'Weekly reviews', 'Commitments', 'Decisions', 'Analyses', 'Pulls', 'Digests', 'Drafts', 'Memory', 'System', 'Meetings']
 export function Library({ id }: { id?: string }) {
   const docs = useQuery({ queryKey: ['docs'], queryFn: api.docs })
   const doc = useQuery({ queryKey: ['doc', id], queryFn: () => api.doc(id!), enabled: !!id })

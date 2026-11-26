@@ -348,9 +348,9 @@ line and press <kbd>Return</kbd>:</p>
 <div class="code"><button type="button" class="copy">Copy</button><pre><code class="language-text">Please install SleePO on this Mac for me. I don't write code, so do each step yourself and tell me
 exactly what to click whenever you need me.
 
-1. Download the code from https://github.com/samattias/sleepo into a new folder called
-   &quot;SleePO-app&quot; in my home folder. It must not be inside OneDrive, iCloud Drive or Dropbox.
-   If GitHub asks me to sign in, help me do that.
+1. Download the code with git (git clone https://github.com/samattias/sleepo) into a new folder called
+   &quot;SleePO-app&quot; in my home folder, so SleePO can update itself later. It must not be inside
+   OneDrive, iCloud Drive or Dropbox.
 2. Run its installer, scripts/install.sh, and fix anything it says is missing (for example
    Apple's Command Line Tools).
 3. Check whether Granola and FluidVoice are in my Applications folder. They're recommended,
@@ -388,7 +388,13 @@ SleePO something.</p>
 </div></section>
 <section id="new" class="soft"><div class="wrap">
 <h2>What's new</h2>
-<div class="changes"><div class="change"><h3>25 Nov 2026</h3><ul>
+<div class="changes"><div class="change"><h3>26 Nov 2026</h3><ul>
+<li><strong>Updates from inside SleePO.</strong> SleePO checks GitHub for a new version once a day and puts a dot on your picture when
+one is out. <strong>Check for updates</strong> is in the menu under your picture; <strong>Update now</strong> backs up the database, installs the
+new version and restarts. Nothing changes until you click, and your data stays as it is.</li>
+<li><strong>Open source.</strong> The code is on GitHub under the MIT licence, and the website is at sleepo.ai.</li>
+</ul>
+</div><div class="change"><h3>25 Nov 2026</h3><ul>
 <li><strong>Actions, the new first page.</strong> What people are waiting on you for (emails that need a response, Teams and Slack messages
 you owe, follow-ups from your calls) beside what SleePO recommends you start (emails it has written, promises you made,
 next steps). It replaces the dashboard.</li>
@@ -401,17 +407,12 @@ and what you lose without it.</li>
 SharePoint or OneDrive and opens it. It shows each step first and does only the ones you allow.</li>
 <li><strong>Continue in Claude Desktop</strong> opens the conversation's own folder, so Claude sees the conversation and its sources.</li>
 </ul>
-</div><div class="change"><h3>20 Nov 2026</h3><ul>
-<li><strong>Your company's code, when a question needs it.</strong> If your company's git repositories are on your Mac, SleePO can search
-them to answer how the product behaves (roles, settings, limits), after the emery yates and product docs.
-See <strong>Knowledge › Product › Code base</strong>.</li>
-</ul>
 </div></div>
 <p class="more-link"><a href="https://github.com/samattias/sleepo/blob/main/CHANGELOG.md">Everything that changed</a></p>
 </div></section>
 <section id="faq"><div class="wrap narrow">
 <h2>Questions</h2>
-<details><summary>Does it ever send anything?</summary><p>No. It writes drafts. You copy them, or open them in Outlook and send them yourself.</p></details><details><summary>Does it change my mailbox or calendar?</summary><p>No. SleePO reads Mail and Calendar without changing them, and it uses the Claude connectors for Teams, Slack and SharePoint only to read. The one exception is a draft you choose to save into Outlook.</p></details><details><summary>What does it cost?</summary><p>There's no SleePO subscription. Its AI work counts towards your Claude plan's usage. <strong>System › Agents</strong> shows every background job, when it ran and what it cost.</p></details><details><summary>Do I need Granola and FluidVoice?</summary><p>No, SleePO runs without them, but we recommend both. Granola lets SleePO know what was said in your meetings: the follow-ups after each call, the promises made in meetings and fuller briefs. FluidVoice lets you speak your instructions instead of typing them. Granola has its own plans and pricing; FluidVoice is free.</p></details><details><summary>Does it work on Windows or with Gmail?</summary><p>It's built for a Mac with Apple Mail and Calendar, and it's tested with Microsoft 365. Other accounts in Apple Mail may work, but they haven't been tested.</p></details><details><summary>Where is my data?</summary><p>Your notes and settings are in the SleePO folder in your home folder. The database is in <code>~/Library/Application Support/Assist</code>. To remove SleePO, quit it and delete those two folders and the <code>SleePO-app</code> folder.</p></details><details><summary>Something isn't working.</summary><p>Open Claude Code in the SleePO-app folder and describe what you see. Claude can run <code>~/.assist/venv/bin/python -m assist.cli doctor</code>, which checks the install and says what's missing.</p></details>
+<details><summary>Does it ever send anything?</summary><p>No. It writes drafts. You copy them, or open them in Outlook and send them yourself.</p></details><details><summary>Does it change my mailbox or calendar?</summary><p>No. SleePO reads Mail and Calendar without changing them, and it uses the Claude connectors for Teams, Slack and SharePoint only to read. The one exception is a draft you choose to save into Outlook.</p></details><details><summary>What does it cost?</summary><p>There's no SleePO subscription. Its AI work counts towards your Claude plan's usage. <strong>System › Agents</strong> shows every background job, when it ran and what it cost.</p></details><details><summary>Do I need Granola and FluidVoice?</summary><p>No, SleePO runs without them, but we recommend both. Granola lets SleePO know what was said in your meetings: the follow-ups after each call, the promises made in meetings and fuller briefs. FluidVoice lets you speak your instructions instead of typing them. Granola has its own plans and pricing; FluidVoice is free.</p></details><details><summary>Does it work on Windows or with Gmail?</summary><p>It's built for a Mac with Apple Mail and Calendar, and it's tested with Microsoft 365. Other accounts in Apple Mail may work, but they haven't been tested.</p></details><details><summary>How do I get updates?</summary><p>SleePO checks GitHub for a new version once a day. When there is one, a dot appears on your picture at the top right; click it, then <strong>Check for updates</strong> and <strong>Update now</strong>. You can check any time from the same menu. SleePO backs up its database, installs the new version and restarts. Your data and settings stay as they are, and nothing updates until you click. The version you have is on the <strong>Account</strong> page.</p></details><details><summary>Where is my data?</summary><p>Your notes and settings are in the SleePO folder in your home folder. The database is in <code>~/Library/Application Support/Assist</code>. To remove SleePO, quit it and delete those two folders and the <code>SleePO-app</code> folder.</p></details><details><summary>Something isn't working.</summary><p>Open Claude Code in the SleePO-app folder and describe what you see. Claude can run <code>~/.assist/venv/bin/python -m assist.cli doctor</code>, which checks the install and says what's missing.</p></details>
 </div></section>
 <section class="final"><div class="wrap">
 <h2>A chief of staff that works while you sleep.</h2>

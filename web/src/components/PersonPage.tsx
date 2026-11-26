@@ -511,7 +511,7 @@ function Documents({ d, first }: { d: PersonPageData; first: string }) {
 function Profile({ x, d }: { x: Person; d: PersonPageData }) {
   return (
     <section>
-      {x.kb && <a href={x.kb} target="_blank" rel="noopener" className={btnClass('outline', 'sm', 'mb-3')}><ExternalLink size={13} />Their page in the emery yates</a>}
+      {x.kb && <a href={x.kb} target="_blank" rel="noopener" className={btnClass('outline', 'sm', 'mb-3')}><ExternalLink size={13} />Their page in the knowledge base</a>}
       <div className="border border-line bg-panel p-5">{x.profile ? <Markdown>{x.profile}</Markdown> : <span className="text-[13px] text-ink2">No written profile yet. Org data only.</span>}</div>
       <p className="mt-2 text-[12px] text-ink2">{d.profile_updated && `Updated ${day(d.profile_updated)}. `}Written by SleePO from your meetings and mail and kept in memory/people; it is a reading of the evidence, not a verdict on the person.</p>
     </section>

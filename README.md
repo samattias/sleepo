@@ -192,9 +192,9 @@ Paste the text below into Claude Code and press <kbd>Return</kbd>:
 Please install SleePO on this Mac for me. I don't write code, so do each step yourself and tell me
 exactly what to click whenever you need me.
 
-1. Download the code from https://github.com/samattias/sleepo into a new folder called
-   "SleePO-app" in my home folder. It must not be inside OneDrive, iCloud Drive or Dropbox.
-   If GitHub asks me to sign in, help me do that.
+1. Download the code with git (git clone https://github.com/samattias/sleepo) into a new folder called
+   "SleePO-app" in my home folder, so SleePO can update itself later. It must not be inside
+   OneDrive, iCloud Drive or Dropbox.
 2. Run its installer, scripts/install.sh, and fix anything it says is missing (for example
    Apple's Command Line Tools).
 3. Check whether Granola and FluidVoice are in my Applications folder. They're recommended,
@@ -251,6 +251,11 @@ lets you speak your instructions instead of typing them. Granola has its own pla
 
 **Does it work on Windows or with Gmail?** It's built for a Mac with Apple Mail and Calendar, and it's tested with
 Microsoft 365. Other accounts in Apple Mail may work, but they haven't been tested.
+
+**How do I get updates?** SleePO checks GitHub for a new version once a day. When there is one, a dot appears on your
+picture at the top right; click it, then **Check for updates** and **Update now**. You can check any time from the same
+menu. SleePO backs up its database, installs the new version and restarts. Your data and settings stay as they are, and
+nothing updates until you click. The version you have is on the **Account** page.
 
 **Where is my data?** Your notes and settings are in the SleePO folder in your home folder. The database is in
 `~/Library/Application Support/Assist`. To remove SleePO, quit it and delete those two folders and the `SleePO-app`

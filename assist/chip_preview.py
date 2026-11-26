@@ -41,7 +41,7 @@ def _head_md(text, n=700, lines=12, title=False):
 
 
 def _first(name):
-    """A first name to show: "Gray" for Gray Selby, "Ash" for Pax Joyce (an initial is skipped)."""
+    """A first name to show: "Gray" for Gray Selby, "Ash" for Glen Yates (an initial is skipped)."""
     toks = (name or "").split()
     return next((t for t in toks if len(t.rstrip(".")) > 1), toks[0] if toks else "")
 

@@ -46,7 +46,7 @@ def _clip(s, n=MAX):
 
 def ask_read(ref):
     """One thing in full by its reference or app link. A library document's id holds slashes (product docs pages are
-    pd/docs/desktop-client/….md, emery yates notes kb/…) and search links it as /explore/library/<id>; SharePoint, KB
+    pd/docs/desktop-client/….md, knowledge base notes kb/…) and search links it as /explore/library/<id>; SharePoint, KB
     and local files come as doc:sp-12. Until 17 Nov 2026 only the last part of a path was looked up, so the chat found
     product docs pages by search but could not open one."""
     ref = (ref or "").strip().strip("\"'").lstrip("#")

@@ -227,9 +227,8 @@ def api_profile_import(body: ImportIn):
 
 
 # ---------------------------------------------------------------- the account (16 Nov 2026)
-# The top bar's account menu and the Account page. Today an install belongs to one person on their Mac, so they are always
-# "signed in" locally; sign-in with a company account comes later, and only this part changes then.
-ACCOUNTS = False   # sign-in and sign-out with real accounts: not yet
+# The top bar's account menu and the Account page. An install belongs to one person on their Mac: there is no sign-in
+# (Sam, 26 Nov 2026: "Remove also the login functionality because we don't need this for now").
 
 
 def _avatar(fname):
@@ -247,17 +246,10 @@ def api_account():
         me = c.execute("SELECT id, avatar FROM people WHERE is_me=1 ORDER BY id LIMIT 1").fetchone()
         work = sorted(p["emails"], key=lambda e: (not org.is_primary_address(e), e))
         return _nocache({
-            "signed_in": bool(p["full_name"]), "method": "local", "accounts": ACCOUNTS,
-            "note": "SleePO runs for one person on this Mac. Accounts with sign-in come later.",
+            "known": bool(p["full_name"]),
             "user": {"name": p["full_name"], "first_name": p["first_name"], "email": work[0] if work else "", "emails": work,
                      "role": p["role"], "company": org.name(c), "avatar": _avatar(me["avatar"] if me else None),
                      "person_id": me["id"] if me else None},
             "data": {"folder": str(db.ASSIST), "code": str(db.APP), "database": str(db.db_path())}})
     finally:
         c.close()
-
-
-@router.post("/api/account/logout")
-def api_account_logout():
-    """Not yet: there are no accounts to sign out of. The menu shows the item switched off; this answers the same."""
-    return {"ok": False, "reason": "Accounts come later: SleePO runs for one person on this Mac."}

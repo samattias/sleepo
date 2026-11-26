@@ -93,6 +93,7 @@ fi
 
 # 5. What is left to do by hand
 [ -f "$APP/web/dist/index.html" ] || print "\n! No built app pages in $APP/web/dist: build assist-web (pnpm build) and copy its dist there, or set ASSIST_WEB_DIST."
+[ -d "$APP/.git" ] || print "\n! $APP was downloaded without git, so SleePO can't update itself. To get updates, download it again with: git clone <the GitHub address>"
 cat <<EOF
 
 Next: open SleePO and follow its setup (who you are, your company, what it can read on this Mac, your bets, the first import):

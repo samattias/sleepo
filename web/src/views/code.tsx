@@ -2,8 +2,8 @@
 // that we have in GitLab with the monolith ... there as a reference if ever the assistant needs to query the code directly").
 // The git clones of the company's code on this Mac (assist/codebase.py): what each is, the branch SleePO reads and how
 // current it is, Update from GitLab, a search over the code with links into GitLab at the line, and the repositories the
-// emery yates names that are not cloned here. Ask SleePO reads the same code through ask-code, as a last resort after
-// the emery yates and the product docs. A document page: the page scrolls, nothing inside it does.
+// knowledge base names that are not cloned here. Ask SleePO reads the same code through ask-code, as a last resort after
+// the knowledge base and the product docs. A document page: the page scrolls, nothing inside it does.
 import { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { ChevronRight, ExternalLink, FolderGit2, GitBranch, MessageCircleQuestion, RefreshCw, Search, X } from 'lucide-react'
@@ -17,7 +17,7 @@ import { AssistPill } from '@/components/AssistPill'
 
 const STALE_DAYS = 30
 const daysOld = (iso: string) => (iso ? Math.floor((Date.now() - Date.parse(iso)) / 86400000) : null)
-const CHECK = ' Look in the code (ask-code) if the emery yates and product docs do not answer it, and say which branch and date the answer comes from.'
+const CHECK = ' Look in the code (ask-code) if the knowledge base and product docs do not answer it, and say which branch and date the answer comes from.'
 
 export function CodeBase({ q: q0 }: { q?: string }) {
   const qc = useQueryClient()
@@ -48,7 +48,7 @@ export function CodeBase({ q: q0 }: { q?: string }) {
         </div>
       </div>
       <p className="mb-5 max-w-[760px] text-[13px] text-ink2">
-        {company}'s source code from {d.host}, read from the clones on this Mac. Ask SleePO looks here when the emery yates and the product
+        {company}'s source code from {d.host}, read from the clones on this Mac. Ask SleePO looks here when the knowledge base and the product
         docs don't say how the product actually behaves (roles and permissions, settings, limits, APIs). It reads each repository's main branch as {d.host} last
         gave it, never your local edits, and nothing is copied into SleePO.
       </p>
@@ -95,7 +95,7 @@ export function CodeBase({ q: q0 }: { q?: string }) {
           <ChevronRight size={14} className="transition-transform group-open:rotate-90" />
           In {d.host}, not on this Mac <span className="font-normal text-ink3">({d.not_cloned.length})</span>
         </summary>
-        <p className="mb-2 mt-1 text-[12.5px] text-ink3">From the emery yates's map of repositories. SleePO cannot read these; when an answer may live in one, it says so.</p>
+        <p className="mb-2 mt-1 text-[12.5px] text-ink3">From the knowledge base's map of repositories. SleePO cannot read these; when an answer may live in one, it says so.</p>
         <ul className="divide-y divide-line border-y border-line">
           {d.not_cloned.map((x) => <li key={x.url} className="flex items-baseline gap-3 py-1.5 text-[12.5px]">
             <a href={x.url} target="_blank" rel="noopener" className="shrink-0 font-mono hover:underline">{x.path}</a>

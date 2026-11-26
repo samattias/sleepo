@@ -154,17 +154,17 @@ class InitiativeWork(unittest.TestCase):
         c.execute("INSERT INTO mail_attachments(item_id, graph_id, name, is_inline, path) VALUES (?, 'a1', 'Budget 2027.xlsx', 0, 'x/Budget 2027.xlsx'), "
                   "(?, 'a2', 'logo.png', 1, 'x/logo.png')", (self.mail, self.mail))
         c.execute("INSERT OR IGNORE INTO sources(id, system, name) VALUES ('teams', 'teams', 'Teams')")
-        chat = self.item("teams", "chat", "work trip", "Sage Gilmore", "")
+        chat = self.item("teams", "chat", "work trip", "Jules Upton", "")
         c.execute("INSERT INTO chat_messages(item_id, source_id, external_id, conversation_name, author, sent_at, body_text, links_json) VALUES (?,?,?,?,?,?,?,?)",
-                  (chat, "teams", "m1", "work trip", "Sage Gilmore", ago(1.5),
+                  (chat, "teams", "m1", "work trip", "Jules Upton", ago(1.5),
                    "Ellis Ingram  I followed up with an email to Prescott-san based on our discussions Tuesday. We are excited about our joint presentatio\u2026  "
                    "Hi Ellis-san, thank you, we will share it with the contoso team.", "[]"))
         c.execute("INSERT INTO chat_attachments(item_id, name, url) VALUES (?, 'Japan schedule.xlsx', 'https://acmellc-my.sharepoint.com/personal/y/Japan%20schedule.xlsx')", (chat,))
         tid = self.topic()
         src = json.loads(c.execute("SELECT sources_json FROM topics WHERE id=?", (tid,)).fetchone()[0])
         src[1]["said"] = [{"who": "Finley Kirby", "text": "Kickoff from 1 November.", "clock": "00:30", "app": f"#/meetings/m-{self.meet}?t=30"}]
-        src.insert(1, {"kind": "chat", "label": "work trip", "ts": ago(1.5), "app": f"#/messages?open={chat}", "clock": "", "who": ["Sage Gilmore"],
-                       "said": [{"who": "Sage Gilmore", "text": "Ellis Ingram  I followed up…", "app": f"#/messages?open={chat}"}]})
+        src.insert(1, {"kind": "chat", "label": "work trip", "ts": ago(1.5), "app": f"#/messages?open={chat}", "clock": "", "who": ["Jules Upton"],
+                       "said": [{"who": "Jules Upton", "text": "Ellis Ingram  I followed up…", "app": f"#/messages?open={chat}"}]})
         c.execute("UPDATE topics SET sources_json=? WHERE id=?", (json.dumps(src), tid))
         c.commit()
         from assist import topics
@@ -180,7 +180,7 @@ class InitiativeWork(unittest.TestCase):
         self.assertEqual(mail["lines"][0]["text"], "Here is the latest deck. 2006 contoso LIVE - Acme EN.pptx The script follows.")   # no addresses, no greeting
         self.assertEqual(len(mail["files"]), 2)
         chat_src = next(r for r in refs if r["kind"] == "chat")
-        self.assertEqual(chat_src["lines"], [{"who": "Sage Gilmore", "text": "thank you, we will share it with the contoso team.",
+        self.assertEqual(chat_src["lines"], [{"who": "Jules Upton", "text": "thank you, we will share it with the contoso team.",
                                              "app": f"#/messages?open={chat}"}])        # his words, not the message he quoted
         meet = next(r for r in refs if r["kind"] == "meeting")
         self.assertEqual((meet["lines"][0]["clock"], meet["lines"][0]["text"]), ("00:30", "Kickoff from 1 November."))

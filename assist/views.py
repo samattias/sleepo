@@ -227,7 +227,7 @@ def bootstrap(con):
             av = avatar_uri(r["avatar"]) if "avatar" in r.keys() else ""
             hdr = (f'<img src="{av}" alt="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;float:right;margin:0 0 8px 12px">\n\n' if av else "") + f"# {r['name']}\n\n**{r['title'] or r['role'] or ''}** · {r['department'] or ''} · {r['location'] or ''}"
             hdr += (f" · reports to {names.get(r['manager_id'])}" if r["manager_id"] else "") + (f" · {reports.get(r['id'])} direct reports" if reports.get(r['id']) else "")
-            hdr += (f" · [emery yates]({r['kb_url']})" if r["kb_url"] else "") + "\n\n"
+            hdr += (f" · [knowledge base]({r['kb_url']})" if r["kb_url"] else "") + "\n\n"
             body = re.sub(r"^# .*\n", "", text, count=1) if text else "_No assistant profile yet; org data only._"
             docs.append({"id": pid, "section": "People", "title": r["name"], "path": f"memory/people/{r['name']}.md", "mtime": (r["updated_at"] or "")[:10],
                          "meta": {"title": r["title"] or ""}, "md": hdr + body, "words": len(body.split())})

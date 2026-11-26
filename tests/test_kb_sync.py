@@ -1,5 +1,5 @@
-"""The emery yates and product docs, read through the connector and built in code (assist/kb_sync.py; Sam, 17 Nov 2026:
-"Update the emery yates, the product docs, and Salesforce too"). Temp database; nothing runs Claude."""
+"""The knowledge base and product docs, read through the connector and built in code (assist/kb_sync.py; Sam, 17 Nov 2026:
+"Update the knowledge base, the product docs, and Salesforce too"). Temp database; nothing runs Claude."""
 import json
 import os
 import subprocess
@@ -10,7 +10,7 @@ from pathlib import Path
 
 from assist import db, kb_sync, pull_hook
 
-KB = {"repo": "kb", "source": "acme-kb", "section": "Emery Yates", "doc_prefix": "kb/"}
+KB = {"repo": "kb", "source": "acme-kb", "section": "Knowledge base", "doc_prefix": "kb/"}
 PD = {"repo": "docs", "source": "public-docs", "section": "Product docs", "doc_prefix": "pd/"}
 NOW = "2026-11-17T10:00:00Z"
 
@@ -34,11 +34,11 @@ class Records(unittest.TestCase):
         self.assertEqual((item["subject"], item["from_name"], item["ts"]), ("Ann Noel", "Sales", "2026-06-28T00:00:00Z"))
         self.assertEqual(item["text"], "Head of sales.\n\n# Ann Noel\n\nRuns sales.")
         self.assertEqual(item["payload"]["frontmatter"], {"date": "2026-06-28", "description": "Head of sales.", "tags": ["kb"]})
-        self.assertEqual((doc["id"], doc["section"], doc["path"]), ("kb/Sales/people/Ann Noel.md", "Emery Yates", "kb/Sales/people/Ann Noel.md"))
+        self.assertEqual((doc["id"], doc["section"], doc["path"]), ("kb/Sales/people/Ann Noel.md", "Knowledge base", "kb/Sales/people/Ann Noel.md"))
 
     def test_product_docs_take_their_section_from_the_folder_under_docs(self):
         item, doc = kb_sync.record(PD, note("docs", "docs/desktop-client/about.md", "---\ntitle: About the client\n---\nBody."), NOW)
-        self.assertEqual((item["from_name"], item["subject"], item["ts"]), ("Harper Lawson", "About the client", NOW))
+        self.assertEqual((item["from_name"], item["subject"], item["ts"]), ("Desktop Client", "About the client", NOW))
         self.assertTrue(doc["body_md"].startswith("# About the client\n\nBody."))
 
     def test_include_fragments_and_other_files_are_not_read(self):
@@ -86,7 +86,7 @@ class Build(unittest.TestCase):
         self.assertEqual((b["failed"], b["gone"]), (["New.md"], []))
 
     def test_remove_takes_the_item_and_its_document(self):
-        db.upsert_document(self.con, "kb/Gone.md", "Emery Yates", "Gone", "x")
+        db.upsert_document(self.con, "kb/Gone.md", "Knowledge base", "Gone", "x")
         kb_sync.remove(self.con, "acme-kb", ["Gone.md"], "kb/")
         self.assertIsNone(self.con.execute("SELECT 1 FROM items WHERE external_id='Gone.md'").fetchone())
         self.assertIsNone(self.con.execute("SELECT 1 FROM documents WHERE id='kb/Gone.md'").fetchone())

@@ -210,10 +210,10 @@ def _company(con, ref):
             "detail": "Its people, deals, recent mail, meetings and messages, and the bets it touches"}
 
 
-# a document by its Documents page id: a file on this Mac (lf), SharePoint or OneDrive (sp), the emery yates (kb), an email
+# a document by its Documents page id: a file on this Mac (lf), SharePoint or OneDrive (sp), the knowledge base (kb), an email
 # attachment (ma) or a file shared in Teams or Slack (ca)
 _DOC = re.compile(r"(lf|sp|kb|ma|ca)-(\d+)")
-_DOC_FROM = {"lf": "File on this Mac", "sp": "SharePoint", "kb": "Emery Yates", "ma": "Email attachment", "ca": "Shared in chat"}
+_DOC_FROM = {"lf": "File on this Mac", "sp": "SharePoint", "kb": "Knowledge base", "ma": "Email attachment", "ca": "Shared in chat"}
 
 
 def _doc_row(con, ref):

@@ -1,4 +1,4 @@
-"""The company emery yates and product docs, kept current (Sam, 17 Nov 2026: "Update the emery yates, the product docs,
+"""The company knowledge base and product docs, kept current (Sam, 17 Nov 2026: "Update the knowledge base, the product docs,
 and Salesforce too"; both were last read on 6 Oct 2026 by a hand-run session that retyped every page into a bundle, and
 nothing repeated it).
 
@@ -46,12 +46,12 @@ def _iso(dt):
 
 
 def repos():
-    """The repositories to mirror: the org pack's kb.repos, else its one emery yates."""
+    """The repositories to mirror: the org pack's kb.repos, else its one knowledge base."""
     kb = org.section("kb", {})
     if kb.get("repos"):
         return [r for r in kb["repos"] if r.get("repo") and r.get("source")]
     if kb.get("folder") and kb.get("connector"):
-        return [{"repo": kb["folder"], "source": kb["folder"], "section": "Emery Yates", "doc_prefix": "kb/"}]
+        return [{"repo": kb["folder"], "source": kb["folder"], "section": "Knowledge base", "doc_prefix": "kb/"}]
     return []
 
 
@@ -79,14 +79,14 @@ def due(con, days=EVERY_DAYS):
 # ---- the runs
 
 def list_prompt(names):
-    return ("EMERY YATES listing, read only. Never write, edit, commit or delete anything. "
+    return ("KNOWLEDGE BASE listing, read only. Never write, edit, commit or delete anything. "
             f"Load {tool('igxkb_list')} with ToolSearch and call it once for each repo: {', '.join(names)} (no folder). "
             "Call no other tool. Then answer with one line: the repos and how many paths each has.")
 
 
 def read_prompt(pairs):
     lines = "\n".join(json.dumps({"repo": r, "path": p}, ensure_ascii=False) for r, p in pairs)
-    return ("EMERY YATES sync, read only. SleePO keeps every note these calls return and builds the records itself: do NOT copy, "
+    return ("KNOWLEDGE BASE sync, read only. SleePO keeps every note these calls return and builds the records itself: do NOT copy, "
             "list or summarise notes, write files, run commands or use any other tool. Never write, edit, commit or delete anything.\n"
             f"Load {tool('igxkb_read_note')} with ToolSearch, then call it once for each repo and path below, with exactly that input. "
             "SleePO replaces each answer with one line naming the note it kept. Make up to 25 calls at once in one turn, until every "
@@ -173,7 +173,7 @@ def record(repo_cfg, note, now):
     item = {"source_id": repo_cfg["source"], "external_id": path, "kind": "doc", "ts": ts, "from_name": _section(path),
             "subject": title, "text": desc + ("\n\n" + body if body else ""), "thread": path, "url": note.get("url"),
             "noise": False, "retention": "general", "pull": 0, "payload": {"frontmatter": meta, "bytes": len(content)}}
-    doc = {"id": repo_cfg.get("doc_prefix", "") + path, "section": repo_cfg.get("section") or "Emery Yates", "title": title,
+    doc = {"id": repo_cfg.get("doc_prefix", "") + path, "section": repo_cfg.get("section") or "Knowledge base", "title": title,
            "body_md": body if body.startswith("# ") else f"# {title}\n\n{body}", "path": f"{repo_cfg['repo']}/{path}", "meta": meta}
     return item, doc
 
@@ -256,9 +256,9 @@ def run(claude=None, model=None, env=None, log=print, cwd=None, on_result=None, 
     lists = listed(_run(claude, model, list_prompt([c["repo"] for c in cfgs]), [tool("igxkb_list")], env, cwd, on_result, 600))
     missing = [c["repo"] for c in cfgs if c["repo"] not in lists]
     if missing:
-        log(f"!! Emery Yates: the connector listed nothing for {', '.join(missing)}")
+        log(f"!! Knowledge base: the connector listed nothing for {', '.join(missing)}")
     pairs = [(c["repo"], p) for c in cfgs if c["repo"] in lists for p in to_read(lists[c["repo"]])]
-    log(f"Emery Yates: {len(pairs)} notes in {', '.join(f'{r} ({len(to_read(lists[r]))})' for r in lists)}, read in {min(RUNS, len(pairs)) or 0} runs side by side")
+    log(f"Knowledge base: {len(pairs)} notes in {', '.join(f'{r} ({len(to_read(lists[r]))})' for r in lists)}, read in {min(RUNS, len(pairs)) or 0} runs side by side")
     calls = []
     if pairs:
         groups = [pairs[i::RUNS] for i in range(min(RUNS, len(pairs)))]
@@ -291,7 +291,7 @@ def run(claude=None, model=None, env=None, log=print, cwd=None, on_result=None, 
                 remove(con, cfg["source"], b["gone"], cfg.get("doc_prefix", ""))
                 con.commit()
             how(con, cfg)
-            log(f"Emery Yates, {repo}: {note(b)}")
+            log(f"Knowledge base, {repo}: {note(b)}")
         ok = bool(built) and not missing and all(not b["failed"] for b in built.values())
         return ok, "; ".join(notes) or "nothing listed"
     finally:

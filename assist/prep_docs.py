@@ -9,7 +9,7 @@ from .promptkit import USER   # the user in prompt text (assist/profile.py)
 GENERIC = {"with", "sync", "meeting", "call", "review", "weekly", "update", "check", "catch", "chat", "discussion", "session",
            "fixed", "teams", "online", "monthly", "daily", "quick", "follow", "intro", "kick", "planning"}
 PER_DOC, TOTAL, MAX_DOCS = 3500, 18000, 14
-SOURCE = {"sharepoint": ("sp", "SharePoint/OneDrive"), "acme-kb": ("kb", "emery yates"), "local": ("lf", "this Mac")}
+SOURCE = {"sharepoint": ("sp", "SharePoint/OneDrive"), "acme-kb": ("kb", "knowledge base"), "local": ("lf", "this Mac")}
 
 
 def _clip(t, n):

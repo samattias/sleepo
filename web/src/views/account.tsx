@@ -1,12 +1,13 @@
-// Account (16 Nov 2026; the account menu, top right): who this SleePO belongs to, how they are signed in, and where their
-// data lives. One person per Mac today, always signed in locally; sign-in with company accounts comes later.
+// Account (16 Nov 2026; the account menu, top right): who this SleePO belongs to, which version it is (Check for updates,
+// Update now: components/Updates.tsx, 26 Nov 2026) and where their data lives. One person per Mac: no sign-in.
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { Download, ExternalLink, Laptop, Loader2, LogOut, Play, Power, RotateCcw, RotateCw, SlidersHorizontal, Upload } from 'lucide-react'
+import { Download, ExternalLink, Loader2, Play, Power, RotateCcw, RotateCw, SlidersHorizontal, Upload } from 'lucide-react'
 import { api } from '@/lib/api'
 import { useProfile } from '@/lib/profile'
 import { Avatar, Button, btnClass, Loading } from '@/components/ui'
+import { UpdatesPanel } from '@/components/Updates'
 
 const Panel = ({ title, children, right }: { title: string; children: ReactNode; right?: ReactNode }) => (
   <section className="mb-5 border border-line bg-panel">
@@ -55,11 +56,7 @@ export function AccountPage() {
         </span>
       </section>
 
-      <Panel title="Sign-in" right={<button disabled={!q.data.accounts} title={q.data.accounts ? undefined : q.data.note} className={btnClass('outline')}><LogOut size={13} /> Log out</button>}>
-        <p className="flex items-center gap-2 text-[13px]"><Laptop size={15} className="shrink-0 text-ink3" />
-          {q.data.signed_in ? <span>Signed in as <b>{u.name}</b> on this Mac.</span> : <span>Not set up yet: fill in your profile.</span>}</p>
-        <p className="mt-1 pl-[23px] text-[12.5px] text-ink3">{q.data.note}</p>
-      </Panel>
+      <UpdatesPanel Panel={Panel} />
 
       <Panel title="At a glance" right={<Link to="/settings" className="text-[12.5px] text-ink2 underline decoration-accent decoration-2 underline-offset-2 hover:text-ink">Change</Link>}>
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-3">

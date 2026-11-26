@@ -113,9 +113,10 @@ class Base(unittest.TestCase):
 
 class Site(Base):
     def test_the_real_readme_builds(self):
-        shutil.copy(ROOT / "docs" / "github" / "README.md", self.repo / "README.md")
-        if (ROOT / "docs" / "github" / "CHANGELOG.md").exists():
-            shutil.copy(ROOT / "docs" / "github" / "CHANGELOG.md", self.repo / "CHANGELOG.md")
+        src = ROOT / "docs" / "github" if (ROOT / "docs" / "github" / "README.md").exists() else ROOT   # the source, or the public copy
+        shutil.copy(src / "README.md", self.repo / "README.md")
+        if (src / "CHANGELOG.md").exists():
+            shutil.copy(src / "CHANGELOG.md", self.repo / "CHANGELOG.md")
         html = build_site.build(self.repo, URL).read_text()
         for sid in ("why", "features", "apps", "private", "install", "faq"):
             self.assertIn(f'id="{sid}"', html)
@@ -124,7 +125,7 @@ class Site(Base):
         for h in features:   # every feature in the README is on the page
             self.assertIn(h, html)
         self.assertNotIn(build_site.TOKEN, html)
-        self.assertIn(f"Download the code from {URL}", html)
+        self.assertRegex(html, r"git clone https://github\.com/[\w.-]+/[\w.-]+")   # the copy's README has its own address
         self.assertNotIn('src="docs/', html)
         self.assertTrue((self.repo / "docs" / ".nojekyll").exists())
 
@@ -197,7 +198,7 @@ class GitUrl(unittest.TestCase):
         import subprocess
         with tempfile.TemporaryDirectory() as d:
             subprocess.run(["git", "init", "-q", d], check=True)
-            for remote in ("https://github.com/a/b.git", "git@example.org:a/b.git", "https://github.com/a/b"):
+            for remote in ("https://github.com/a/b.git", "git@github.com:a/b.git", "https://github.com/a/b"):
                 subprocess.run(["git", "-C", d, "remote", "remove", "origin"], capture_output=True)
                 subprocess.run(["git", "-C", d, "remote", "add", "origin", remote], check=True)
                 self.assertEqual(build_site.git_url(d), "https://github.com/a/b")

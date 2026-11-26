@@ -2,7 +2,7 @@
 [company] code base that we have in GitLab with the monolith ... cloned locally ... if ever the assistant needs to query
 the code directly ... Not always, 'cause I guess it's a big query, but I want it there").
 
-The case that asked for it: a sales leader asked how the platform supports certain user roles; the emery yates and the
+The case that asked for it: a sales leader asked how the platform supports certain user roles; the knowledge base and the
 product docs did not say, the code does. So the code is the last place SleePO looks for how the product behaves, not the first.
 
 Where it comes from. Clones are found, not configured: the folders in the home folder (two levels down) whose `origin` is
@@ -16,7 +16,8 @@ refused); the working tree, local branches and stashes are left alone. Weekly fr
 
 Who reads it.
 - The Code base page (Knowledge › Product): the clones, how current each is, search, and links into GitLab.
-- Ask SleePO through `assist.cli ask-code` (repos, search, files, ls, read). Its instructions say to try the emery yates and the product docs first and to read code only for how the product actually behaves (roles and permissions,
+- Ask SleePO through `assist.cli ask-code` (repos, search, files, ls, read). Its instructions say to try the knowledge
+  base and the product docs first and to read code only for how the product actually behaves (roles and permissions,
   settings, limits, APIs), or when asked.
 Key files, certificates and env files are never searched or read, and values that look like passwords or tokens are
 masked in what comes back. Reads only, except fetch() and settings changes made from the page.
@@ -62,7 +63,7 @@ TEST_PATH = re.compile(r"(^|/)(tests?|__tests__|spec|e2e)(/|$)|\.(spec|test)\.\w
 # ---------------------------------------------------------------- configuration
 def config():
     """The org pack's `code` section: hosts (where the company's code lives, as it appears in a remote URL), host_name,
-    map_doc (the emery yates note that maps repositories to products) and repos ({name: {label, about}})."""
+    map_doc (the knowledge base note that maps repositories to products) and repos ({name: {label, about}})."""
     from . import org
     c = org.section("code", {}) or {}
     return c if isinstance(c, dict) else {}
@@ -277,7 +278,7 @@ def describe(r, con=None):
 
 
 def overview(con=None):
-    """GET /api/code: the clones, described; the repositories the emery yates names that are not on this Mac; settings."""
+    """GET /api/code: the clones, described; the repositories the knowledge base names that are not on this Mac; settings."""
     cl = [describe(r, con) for r in clones(con)]
     have = {r["web"].lower() for r in cl if r.get("web")}
     cfg = config()
@@ -287,7 +288,7 @@ def overview(con=None):
 
 
 def known(con=None):
-    """The repositories the emery yates's map names ([{path, url, about}]), read from SleePO's copy of that note."""
+    """The repositories the knowledge base's map names ([{path, url, about}]), read from SleePO's copy of that note."""
     doc = config().get("map_doc")
     if not doc:
         return []

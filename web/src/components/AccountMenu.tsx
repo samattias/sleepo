@@ -1,13 +1,14 @@
-// The account menu, top right of the header (16 Nov 2026): the user's picture, and under it who is signed in, Account,
-// Personalisation, and Log in / Log out. Today an install belongs to one person on their Mac, so they are always signed in
-// locally and Log out is switched off; with real accounts only /api/account and these two items change.
+// The account menu, top right of the header (16 Nov 2026): the user's picture, and under it who they are, Account,
+// Personalisation and Check for updates (Sam, 26 Nov 2026; components/Updates.tsx). One person per Mac: no sign-in
+// (Log in / Log out removed the same day: "we don't need this for now").
 import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { LogIn, LogOut, SlidersHorizontal, UserRound } from 'lucide-react'
+import { SlidersHorizontal, UserRound } from 'lucide-react'
 import { api } from '@/lib/api'
 import { cn } from '@/lib/util'
 import { Avatar, popoverClass } from './ui'
+import { UpdateDot, UpdateMenuSection } from './Updates'
 
 export function AccountMenu() {
   const q = useQuery({ queryKey: ['account'], queryFn: api.account, staleTime: 300_000 })
@@ -24,17 +25,17 @@ export function AccountMenu() {
   }, [open])
   const a = q.data
   const u = a?.user
-  const item = 'flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] text-ink no-underline hover:bg-panel2'
-  const off = 'flex w-full cursor-not-allowed items-center gap-2.5 px-3 py-2 text-left text-[13px] text-ink3'
+  const item = 'flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] text-ink no-underline hover:bg-panel2 disabled:cursor-default disabled:hover:bg-transparent'
   return (
     <div ref={box} className="relative">
       <button onClick={() => setOpen(!open)} aria-label="Account" aria-haspopup="menu" aria-expanded={open} title={u?.name || 'Account'}
-        className="grid size-8 place-items-center rounded-full ring-offset-2 ring-offset-panel hover:ring-2 hover:ring-line focus-visible:ring-2 focus-visible:ring-ink">
+        className="relative grid size-8 place-items-center rounded-full ring-offset-2 ring-offset-panel hover:ring-2 hover:ring-line focus-visible:ring-2 focus-visible:ring-ink">
         {u?.name ? <Avatar p={{ name: u.name, avatar: u.avatar }} size={30} /> : <UserRound size={17} className="text-ink2" aria-hidden />}
+        <UpdateDot />
       </button>
       {open && (
         <div role="menu" className={cn(popoverClass, 'absolute right-0 top-[calc(100%+8px)] z-50 w-[280px]')}>
-          {a?.signed_in && u ? (
+          {a?.known && u ? (
             <div className="flex items-center gap-3 border-b border-line px-3 py-3">
               <Avatar p={{ name: u.name, avatar: u.avatar }} size={40} />
               <div className="min-w-0">
@@ -50,11 +51,7 @@ export function AccountMenu() {
             <Link to="/account" role="menuitem" className={item} onClick={() => setOpen(false)}><UserRound size={15} className="text-ink3" /> Account</Link>
             <Link to="/settings" role="menuitem" className={item} onClick={() => setOpen(false)}><SlidersHorizontal size={15} className="text-ink3" /> Personalisation</Link>
           </div>
-          <div className="border-t border-line py-1">
-            {a?.signed_in
-              ? <button role="menuitem" disabled={!a.accounts} className={a.accounts ? item : off} title={a.accounts ? undefined : a.note}><LogOut size={15} /> Log out{!a.accounts && <span className="ml-auto text-[11px]">later</span>}</button>
-              : <button role="menuitem" disabled={!a?.accounts} className={a?.accounts ? item : off} title={a?.note}><LogIn size={15} /> Log in{!a?.accounts && <span className="ml-auto text-[11px]">later</span>}</button>}
-          </div>
+          <UpdateMenuSection item={item} />
         </div>)}
     </div>
   )

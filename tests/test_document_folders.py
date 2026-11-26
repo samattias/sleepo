@@ -1,4 +1,4 @@
-"""Document folders (assist/documents.py): Sam's move wins over the card and the filing pass; the emery yates is never filed.
+"""Document folders (assist/documents.py): Sam's move wins over the card and the filing pass; the knowledge base is never filed.
 Run: ~/.assist/venv/bin/python -m unittest discover -s tests"""
 import json
 import tempfile

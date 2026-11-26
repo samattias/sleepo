@@ -95,7 +95,7 @@ function splitDm(thread: string) {
   let t = thread.trim(), topic = ''
   const m = t.match(/\s*\(([^)]*)\)\s*$/)
   if (m) { t = t.slice(0, m.index).trim(); if (!/^dm$/i.test(m[1].trim())) topic = m[1].trim() }
-  // "Harper Brook 1:1", "Gray Selby chat", "Chat: Sam, Sage Gilmore", "Sam / Ellis Ingram": the other person's DM
+  // "Harper Brook 1:1", "Gray Selby chat", "Chat: Sam, Jules Upton", "Sam / Ellis Ingram": the other person's DM
   const name = t.replace(DM_PREFIX, '').replace(/\s+(dm|1:1|chat)$/i, '').trim()
   const parts = name.split(/\s*[,/]\s*/).filter((x) => x && !isMe(x))
   return { name: parts.length === 1 ? parts[0] : name, topic }

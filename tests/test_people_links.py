@@ -76,10 +76,10 @@ class PeopleLinks(unittest.TestCase):
         c = self.con
         c.execute("INSERT INTO people(id, name) VALUES (6, 'Noel Osborne'), (7, 'Finley One'), (8, 'Finley Two')")
         c.execute("INSERT INTO people_aliases VALUES ('noel osborne', 6), ('jira@acme.atlassian.net', 3)")   # a Jira mail once 'from Gray'
-        other = self.mail("inbox", "quinn.dalton@acme.example", ["sam.doe@acme.example"])
+        other = self.mail("inbox", "marlow.carver@acme.example", ["sam.doe@acme.example"])
         jira = self.mail("inbox", "jira@acme.atlassian.net", ["sam.doe@acme.example"])
         c.execute("UPDATE items SET from_name='Pat Noel (Jira)' WHERE id=?", (jira,))
-        chat = self.chat("group chat ops", "group", "Quinn Dalton", "Done")
+        chat = self.chat("group chat ops", "group", "Marlow Carver", "Done")
         note = self.item("teams", "note", 1, "Noel to share the plan. Finley owns the build. We will mark it done.")
         entities.link(c, log=lambda *_: None)
         self.assertTrue({other, chat, note} <= self.linked(6))

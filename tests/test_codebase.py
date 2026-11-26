@@ -66,10 +66,10 @@ class Base(unittest.TestCase):
 
 class Urls(unittest.TestCase):
     def test_web_and_ssh_forms(self):
-        self.assertEqual(codebase.web_url("git@example.org:acme/ice-nine.git"), "https://gitlab.com/acme/ice-nine")
+        self.assertEqual(codebase.web_url("git@gitlab.com:acme/ice-nine.git"), "https://gitlab.com/acme/ice-nine")
         self.assertEqual(codebase.web_url("https://token@example.org/acme/central-webapp.git"), "https://gitlab.com/acme/central-webapp")
-        self.assertEqual(codebase.ssh_url("https://gitlab.com/acme/central-webapp.git"), "git@example.org:acme/central-webapp.git")
-        self.assertIsNone(codebase.ssh_url("git@example.org:acme/x.git"))
+        self.assertEqual(codebase.ssh_url("https://gitlab.com/acme/central-webapp.git"), "git@gitlab.com:acme/central-webapp.git")
+        self.assertIsNone(codebase.ssh_url("git@gitlab.com:acme/x.git"))
 
 
 class Clones(Base):
@@ -77,7 +77,7 @@ class Clones(Base):
         other = self.home / "Developer" / "mine"
         other.mkdir(parents=True)
         git(other, "init", "-q")
-        git(other, "remote", "add", "origin", "git@example.org:someone/mine.git")
+        git(other, "remote", "add", "origin", "git@github.com:someone/mine.git")
         got = codebase.clones()
         self.assertEqual([r["path"] for r in got], [str(self.repo)])
 
@@ -148,7 +148,7 @@ class Updating(Base):
 
 
 class Known(unittest.TestCase):
-    def test_the_emery_yates_map(self):
+    def test_the_knowledge_base_map(self):
         con = sqlite3.connect(":memory:")
         con.execute("CREATE TABLE documents (id TEXT, body_md TEXT)")
         con.execute("INSERT INTO documents VALUES ('kb/map.md', ?)", (

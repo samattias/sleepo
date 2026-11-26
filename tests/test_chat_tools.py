@@ -97,11 +97,11 @@ class ReadByLink(unittest.TestCase):
         con = db.connect()
         db.migrate(con)
         con.execute("INSERT INTO documents (id, section, title, path, body_md) VALUES (?,?,?,?,?)",
-                    ("pd/docs/desktop-client/about-the-desktop-client.md", "Product docs", "About the harper lawson",
-                     "public-docs/docs/desktop-client/about-the-desktop-client.md", "# About the harper lawson\n\nThe client models processes."))
+                    ("pd/docs/desktop-client/about-the-desktop-client.md", "Product docs", "About the desktop client",
+                     "public-docs/docs/desktop-client/about-the-desktop-client.md", "# About the desktop client\n\nThe client models processes."))
         con.execute("INSERT INTO documents (id, section, title, path, body_md) VALUES (?,?,?,?,?)",
                     ("about-the-desktop-client.md", "Library", "Wrong one", "", "not this"))
-        con.execute("INSERT OR IGNORE INTO sources(id, system, name) VALUES ('acme-kb', 'acme-kb', 'Emery Yates')")
+        con.execute("INSERT OR IGNORE INTO sources(id, system, name) VALUES ('acme-kb', 'acme-kb', 'Knowledge base')")
         con.execute("INSERT INTO items (id, source_id, external_id, kind, ts, pulled_at, subject, text) VALUES (?,?,?,?,?,?,?,?)",
                     (12, "acme-kb", "Products/Copilot.md", "doc", "2026-11-17T09:00:00Z", "2026-11-17T09:00:00Z", "Copilot", "Copilot drafts models."))
         con.commit()
@@ -122,7 +122,7 @@ class ReadByLink(unittest.TestCase):
             out = chat_tools.ask_read(ref)
             self.assertIn("The client models processes.", out, ref)
 
-    def test_a_emery_yates_note_opens_by_ref_or_link(self):
+    def test_a_knowledge_base_note_opens_by_ref_or_link(self):
         for ref in ("kb-12", "doc:kb-12", "#doc:kb-12"):
             self.assertIn("Copilot drafts models.", chat_tools.ask_read(ref), ref)
 

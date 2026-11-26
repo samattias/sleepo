@@ -52,7 +52,7 @@ export type MailFull = { id: number; folder: string; ts: string; note: string | 
 export type DocItem = { id: string; origin: 'sharepoint' | 'kb' | 'email' | 'teams' | 'slack' | 'local'; name: string; ext: string; author: string; ts: string; where: string; url: string; preview: string; has_text: boolean; size: number | null; ref: string | null; mail_id?: number; cloud_only?: boolean; open_url?: string; open_where?: string
   card?: { title: string; kind: string; summary: string; sensitivity: string; is_current: number | null; versions: number | null; initiatives: string[] } | null
   view?: 'pdf' | 'image' | 'quicklook' | 'office-web' | 'text' | null
-  // where it is filed (assist/documents.py): moved by Sam > its card > the filing pass > confirmed links; kb = emery yates page
+  // where it is filed (assist/documents.py): moved by Sam > its card > the filing pass > confirmed links; kb = knowledge base page
   folder: { initiatives: string[]; kind: string; sensitivity: string; by: 'sam' | 'card' | 'claude' | 'links' | 'kb' } }
 export type PrepItem = { event_id: string; item_id: number; subject: string; start: string; end: string; local: string; attendees: string[]; organizer: string; location: string; web_link: string; join_url?: string; brief: { doc_id: string; title: string; updated_at: string; generated: string } | null; job: { running: boolean; started: string; finished: string | null; ok: boolean | null; error?: string; notes?: string } | null }
 export type PrepJob = NonNullable<PrepItem['job']>
@@ -312,10 +312,16 @@ export type ChipLine = { who?: string; when?: string; when_text?: string; text: 
 export type ChipPreview = PageCtx & { kicker: string; at: string; end?: string; facts: [string, string, string?][]; text: string; md: string
   lines_label: string; lines: ChipLine[]; draft_text: string; url: string; reads: string }
 export type Account = {
-  signed_in: boolean; method: 'local' | string; accounts: boolean; note: string
+  known: boolean   // the profile names the user (one person per Mac: no sign-in)
   user: { name: string; first_name: string; email: string; emails: string[]; role: string; company: string; avatar: string; person_id: number | null }
   data: { folder: string; code: string; database: string }
 }
+// Versions and updates (assist/updates.py): this code's release, GitHub's latest, and the last update
+export type Release = { version: string; tag: string; notes: string; url: string; published: string }
+export type UpdateRun = { running?: boolean; phase?: string; ok?: boolean | null; error?: string; from?: string | null; to?: string; version?: string
+  started?: string; finished?: string; templates?: { updated: string[]; added: string[]; kept: string[] } }
+export type Updates = { version: string | null; dev: boolean; repo: string | null; latest: Release | null; available: boolean; checked: string | null
+  error: string; auto: boolean; blocked: string; running: boolean; update: UpdateRun }
 // First-run setup (assist/onboarding.py, views/setup.tsx) and the demo copy (assist/demo.py)
 export type SetupCheck = { id: string; title: string; why: string; status: 'ok' | 'todo' | 'optional'; detail: string; required: boolean; python_app?: string; url?: string
   recommended?: boolean; app?: boolean; allowed?: boolean }   // Granola and FluidVoice: strongly recommended, installed or not
@@ -444,7 +450,9 @@ export const api = {
   memoryLearn: () => post<{ started: boolean }>('/api/memory/learn'),
   meta: () => get<Meta>('/api/meta'),
   account: () => get<Account>('/api/account'),
-  accountLogout: () => post<{ ok: boolean; reason?: string }>('/api/account/logout'),
+  updates: () => get<Updates>('/api/updates'),
+  updatesCheck: () => post<Updates>('/api/updates/check'),
+  updatesInstall: (tag?: string) => post<Updates & { started?: boolean; reason?: string }>('/api/updates/install', { tag }),
   profile: () => get<ProfileData>('/api/profile'),
   profileSave: (b: ProfileSave) => send<ProfileData>('PUT', '/api/profile', b),
   profileApply: () => post<{ restarting: boolean; reason?: string }>('/api/profile/apply'),

@@ -112,7 +112,7 @@ def load(con, mid):
     out["summary_md"] = "\n\n".join(summaries)
     names = {}
 
-    def speaker(raw):   # Granola's display name ("Marlow Harlow", "Remy Osborne") -> the person's name in SleePO
+    def speaker(raw):   # Granola's display name ("Marlow Harlow", "Nell Sutton") -> the person's name in SleePO
         if raw not in names:
             pid = db.resolve_person(con, raw)
             p = con.execute("SELECT name FROM people WHERE id=?", (pid,)).fetchone() if pid else None
